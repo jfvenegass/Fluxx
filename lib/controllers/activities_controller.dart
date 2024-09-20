@@ -1,0 +1,116 @@
+import 'package:get/get.dart';
+
+class ActivitiesController extends GetxController {
+  // Lista de actividades booleanas (nombre y si está chequeada o no)
+  final booleanActivities = [
+    {'Ejercicio matutino': false},
+    {'Meditación': false},
+  ].obs;
+
+  // Lista de actividades cuantitativas (nombre, valor inicial y actual)
+  final quantitativeActivities = [
+    {'Ejercicio de fuerza': {'initial': 5, 'current': 0}},
+    {'Ciclismo': {'initial': 3, 'current': 0}},
+  ].obs;
+
+  // Puntajes
+  var dailyPoints = 0.obs; // Puntos obtenidos en el día
+  var totalPoints = 0.obs; // Puntos acumulados (inicialmente en 0)
+
+  // Método para contar el total de actividades (booleanas + cuantitativas)
+  int get totalActivities => booleanActivities.length + quantitativeActivities.length;
+
+  // Método para contar cuántas actividades booleanas están chequeadas
+  int get checkedBooleanActivities => booleanActivities.where((activity) => activity.values.first).length;
+
+  // Método para contar cuántas actividades cuantitativas se han hecho al menos una vez
+  int get completedQuantitativeActivities => quantitativeActivities
+      .where((activity) => activity.values.first['current']! > 0)
+      .length;
+
+  // Método para contar el número total de veces que se ha realizado una actividad cuantitativa
+  int get totalQuantitativeActivityCount => quantitativeActivities
+      .map((activity) => activity.values.first['current']!)
+      .reduce((a, b) => a + b);
+
+  // Añadir una nueva actividad booleana
+  void addBooleanActivity(String activityName) {
+    booleanActivities.add({activityName: false});
+  }
+
+  // Eliminar una actividad booleana
+  void removeBooleanActivity(int index) {
+    booleanActivities.removeAt(index);
+  }
+
+  // Alternar el estado de una actividad booleana (chequeada o no)
+  void toggleBooleanActivity(int index) {
+    final activity = booleanActivities[index];
+    final key = activity.keys.first;
+    booleanActivities[index] = {key: !activity[key]!};
+
+    // Recalcular puntos
+    _updatePoints();
+  }
+
+  // Añadir una nueva actividad cuantitativa
+  void addQuantitativeActivity(String activityName, int initialCount) {
+    quantitativeActivities.add({activityName: {'initial': initialCount, 'current': 0}});
+  }
+
+  // Eliminar una actividad cuantitativa
+  void removeQuantitativeActivity(int index) {
+    quantitativeActivities.removeAt(index);
+  }
+
+  // Incrementar el valor actual de una actividad cuantitativa
+  void incrementQuantitativeActivity(int index) {
+    final activity = quantitativeActivities[index];
+    final key = activity.keys.first;
+    final currentCount = activity[key]!['current']!;
+    quantitativeActivities[index] = {
+      key: {
+        'initial': activity[key]!['initial']!,
+        'current': currentCount + 1
+      }
+    };
+
+    // Recalcular puntos
+    _updatePoints();
+  }
+
+  // Decrementar el valor actual de una actividad cuantitativa
+  void decrementQuantitativeActivity(int index) {
+    final activity = quantitativeActivities[index];
+    final key = activity.keys.first;
+    final currentCount = activity[key]!['current']!;
+    if (currentCount > 0) {
+      quantitativeActivities[index] = {
+        key: {
+          'initial': activity[key]!['initial']!,
+          'current': currentCount - 1
+        }
+      };
+    }
+
+    // Recalcular puntos
+    _updatePoints();
+  }
+
+  // Actualizar los puntajes diarios
+  void _updatePoints() {
+    // Calcular los puntos diarios
+    int newDailyPoints = (checkedBooleanActivities * 3) + totalQuantitativeActivityCount;
+    dailyPoints.value = newDailyPoints;
+  }
+
+  // Añadir los puntos diarios al total (cuando decidas hacerlo)
+  void addDailyPointsToTotal() {
+    totalPoints.value += dailyPoints.value;
+  }
+
+  // Resetear puntos diarios (se puede usar al final del día)
+  void resetDailyPoints() {
+    dailyPoints.value = 0;
+  }
+}
