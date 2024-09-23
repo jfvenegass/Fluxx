@@ -5,9 +5,12 @@ import 'package:get/get.dart';
 class ActivitiesDetailsScreen extends StatelessWidget {
   const ActivitiesDetailsScreen({super.key});
 
+
+
   @override
   Widget build(BuildContext context) {
     final ActivitiesController controller = Get.find();
+    
 
     void showAddBooleanActivityDialog() {
       final TextEditingController nameController = TextEditingController();

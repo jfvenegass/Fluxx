@@ -113,4 +113,42 @@ class ActivitiesController extends GetxController {
   void resetDailyPoints() {
     dailyPoints.value = 0;
   }
+
+    // Método para reiniciar las actividades booleanas (desmarcar todas)
+  void resetBooleanActivities() {
+    for (var i = 0; i < booleanActivities.length; i++) {
+      final activity = booleanActivities[i];
+      final key = activity.keys.first;
+      booleanActivities[i] = {key: false};
+    }
+  }
+
+  // Método para reiniciar las actividades cuantitativas (poner en 0 las actuales)
+  void resetQuantitativeActivities() {
+    for (var i = 0; i < quantitativeActivities.length; i++) {
+      final activity = quantitativeActivities[i];
+      final key = activity.keys.first;
+      quantitativeActivities[i] = {
+        key: {
+          'initial': activity[key]!['initial']!,
+          'current': 0,
+        }
+      };
+    }
+  }
+
+  // Método para añadir los puntos diarios al total y reiniciar las actividades
+  void addDailyPointsToTotalAndResetActivities() {
+    // Añadir los puntos diarios al total
+    addDailyPointsToTotal();
+
+    // Resetear las actividades booleanas y cuantitativas
+    resetBooleanActivities();
+    resetQuantitativeActivities();
+
+    // Resetear los puntos diarios
+    resetDailyPoints();
+  }
 }
+
+

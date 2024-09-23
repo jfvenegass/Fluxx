@@ -7,31 +7,35 @@ class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   void _showConfirmationDialog(BuildContext context, ActivitiesController controller) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Confirmar'),
-          content: const Text('¿Deseas añadir los puntos diarios al total?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Cerrar el diálogo
-              },
-              child: const Text('Cancelar'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                controller.addDailyPointsToTotal();
-                Navigator.of(context).pop(); // Cerrar el diálogo
-              },
-              child: const Text('Añadir'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Confirmar'),
+        content: const Text('¿Deseas añadir los puntos diarios al total y reiniciar las actividades?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Cerrar el diálogo
+            },
+            child: const Text('Cancelar'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              // Añadir puntos al total y reiniciar actividades
+              controller.addDailyPointsToTotalAndResetActivities();
+              
+              // Cerrar el diálogo
+              Navigator.of(context).pop();
+              
+            },
+            child: const Text('Añadir'),
+          ),
+        ],
+      );
+    },
+  );
+}
 
   @override
   Widget build(BuildContext context) {
