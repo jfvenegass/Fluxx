@@ -1,98 +1,14 @@
 import 'package:app_movil/controllers/activities_controller.dart';
+import 'package:app_movil/pages/widgets/activities_modales.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ActivitiesDetailsScreen extends StatelessWidget {
   const ActivitiesDetailsScreen({super.key});
 
-
-
   @override
   Widget build(BuildContext context) {
     final ActivitiesController controller = Get.find();
-    
-
-    void showAddBooleanActivityDialog() {
-      final TextEditingController nameController = TextEditingController();
-
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Añadir Actividad Booleana'),
-            content: TextField(
-              controller: nameController,
-              decoration: const InputDecoration(hintText: 'Nombre de la actividad'),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Cancelar'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  final String activityName = nameController.text.trim();
-                  if (activityName.isNotEmpty) {
-                    controller.addBooleanActivity(activityName);
-                    Navigator.of(context).pop();
-                  }
-                },
-                child: const Text('Añadir'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-
-    void showAddQuantitativeActivityDialog() {
-      final TextEditingController nameController = TextEditingController();
-      final TextEditingController countController = TextEditingController();
-
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Añadir Actividad Cuantitativa'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: nameController,
-                  decoration: const InputDecoration(hintText: 'Nombre de la actividad'),
-                ),
-                TextField(
-                  controller: countController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(hintText: 'Cantidad esperada'),
-                ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Cancelar'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  final String activityName = nameController.text.trim();
-                  final int? initialCount = int.tryParse(countController.text.trim());
-                  if (activityName.isNotEmpty && initialCount != null) {
-                    controller.addQuantitativeActivity(activityName, initialCount);
-                    Navigator.of(context).pop();
-                  }
-                },
-                child: const Text('Añadir'),
-              ),
-            ],
-          );
-        },
-      );
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -126,7 +42,7 @@ class ActivitiesDetailsScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 8.0),
                     ElevatedButton(
-                      onPressed: showAddBooleanActivityDialog,
+                      onPressed: () => showAddBooleanActivityDialog(context, controller), // Llamada al modal
                       child: const Text('Añadir'),
                     ),
                   ],
@@ -179,7 +95,7 @@ class ActivitiesDetailsScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 8.0),
                     ElevatedButton(
-                      onPressed: showAddQuantitativeActivityDialog,
+                      onPressed: () => showAddQuantitativeActivityDialog(context, controller), // Llamada al modal
                       child: const Text('Añadir'),
                     ),
                   ],

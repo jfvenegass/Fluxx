@@ -9,8 +9,12 @@ class ActivitiesController extends GetxController {
 
   // Lista de actividades cuantitativas (nombre, valor inicial y actual)
   final quantitativeActivities = [
-    {'Ejercicio de fuerza': {'initial': 5, 'current': 0}},
-    {'Ciclismo': {'initial': 3, 'current': 0}},
+    {
+      'Ejercicio de fuerza': {'initial': 5, 'current': 0}
+    },
+    {
+      'Ciclismo': {'initial': 3, 'current': 0}
+    },
   ].obs;
 
   // Puntajes
@@ -18,10 +22,12 @@ class ActivitiesController extends GetxController {
   var totalPoints = 0.obs; // Puntos acumulados (inicialmente en 0)
 
   // Método para contar el total de actividades (booleanas + cuantitativas)
-  int get totalActivities => booleanActivities.length + quantitativeActivities.length;
+  int get totalActivities =>
+      booleanActivities.length + quantitativeActivities.length;
 
   // Método para contar cuántas actividades booleanas están chequeadas
-  int get checkedBooleanActivities => booleanActivities.where((activity) => activity.values.first).length;
+  int get checkedBooleanActivities =>
+      booleanActivities.where((activity) => activity.values.first).length;
 
   // Método para contar cuántas actividades cuantitativas se han hecho al menos una vez
   int get completedQuantitativeActivities => quantitativeActivities
@@ -40,7 +46,16 @@ class ActivitiesController extends GetxController {
 
   // Eliminar una actividad booleana
   void removeBooleanActivity(int index) {
+    // Si la actividad estaba chequeada, restamos sus puntos antes de eliminarla
+    final activity = booleanActivities[index];
+    if (activity.values.first) {
+      dailyPoints.value -= 3;
+    }
+
     booleanActivities.removeAt(index);
+
+    // Recalcular puntos
+    _updatePoints();
   }
 
   // Alternar el estado de una actividad booleana (chequeada o no)
@@ -55,12 +70,22 @@ class ActivitiesController extends GetxController {
 
   // Añadir una nueva actividad cuantitativa
   void addQuantitativeActivity(String activityName, int initialCount) {
-    quantitativeActivities.add({activityName: {'initial': initialCount, 'current': 0}});
+    quantitativeActivities.add({
+      activityName: {'initial': initialCount, 'current': 0}
+    });
   }
 
   // Eliminar una actividad cuantitativa
   void removeQuantitativeActivity(int index) {
+    // Restar los puntos aportados por la actividad antes de eliminarla
+    final activity = quantitativeActivities[index];
+    final currentCount = activity.values.first['current']!;
+    dailyPoints.value -= currentCount; // Restamos las veces que se ha realizado
+
     quantitativeActivities.removeAt(index);
+
+    // Recalcular puntos
+    _updatePoints();
   }
 
   // Incrementar el valor actual de una actividad cuantitativa
@@ -69,10 +94,7 @@ class ActivitiesController extends GetxController {
     final key = activity.keys.first;
     final currentCount = activity[key]!['current']!;
     quantitativeActivities[index] = {
-      key: {
-        'initial': activity[key]!['initial']!,
-        'current': currentCount + 1
-      }
+      key: {'initial': activity[key]!['initial']!, 'current': currentCount + 1}
     };
 
     // Recalcular puntos
@@ -100,7 +122,8 @@ class ActivitiesController extends GetxController {
   // Actualizar los puntajes diarios
   void _updatePoints() {
     // Calcular los puntos diarios
-    int newDailyPoints = (checkedBooleanActivities * 3) + totalQuantitativeActivityCount;
+    int newDailyPoints =
+        (checkedBooleanActivities * 3) + totalQuantitativeActivityCount;
     dailyPoints.value = newDailyPoints;
   }
 
@@ -114,7 +137,7 @@ class ActivitiesController extends GetxController {
     dailyPoints.value = 0;
   }
 
-    // Método para reiniciar las actividades booleanas (desmarcar todas)
+  // Método para reiniciar las actividades booleanas (desmarcar todas)
   void resetBooleanActivities() {
     for (var i = 0; i < booleanActivities.length; i++) {
       final activity = booleanActivities[i];
@@ -150,5 +173,3 @@ class ActivitiesController extends GetxController {
     resetDailyPoints();
   }
 }
-
-
