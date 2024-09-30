@@ -1,34 +1,34 @@
 import 'package:flutter/material.dart';
 
-class BottomNavBar extends StatelessWidget {
-  final int currentIndex;
-  final Function(int) onTap;
+class BarraNavegacion extends StatelessWidget {
+  final int selectedIndex;
+  final Function(int) onItemTapped;
 
-  const BottomNavBar({
+  const BarraNavegacion({
     super.key,
-    required this.currentIndex,
-    required this.onTap,
+    required this.selectedIndex,
+    required this.onItemTapped,
   });
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      currentIndex: currentIndex,
-      onTap: onTap,
       items: const [
         BottomNavigationBarItem(
-          icon: Icon(Icons.help), 
-          label: 'Ayuda',
+          icon: Icon(Icons.help_outline),
+          label: 'Info',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.home), 
-          label: 'Inicio',
+          icon: Icon(Icons.home),
+          label: 'Home',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.person),
           label: 'Usuario',
         ),
       ],
+      currentIndex: selectedIndex,
+      onTap: onItemTapped,
     );
   }
 }

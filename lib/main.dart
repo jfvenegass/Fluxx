@@ -1,5 +1,7 @@
 import 'package:app_movil/controllers/activities_controller.dart';
 import 'package:app_movil/pages/home_page.dart';
+import 'package:app_movil/pages/user_page.dart'; 
+import 'package:app_movil/pages/activities_details.dart'; 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -20,7 +22,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(),
+      home: const HomePage(), // Página inicial
+      routes: {
+        '/home': (context) => const HomePage(), 
+        '/user_info': (context) => const UserInfoPage(), 
+        '/activities_details': (context) => const ActivitiesDetailsScreen(), 
+      },
     );
   }
 }

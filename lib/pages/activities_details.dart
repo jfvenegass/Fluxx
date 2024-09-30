@@ -2,9 +2,56 @@ import 'package:app_movil/controllers/activities_controller.dart';
 import 'package:app_movil/pages/widgets/activities_modales.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:app_movil/pages/widgets/barra_navegacion.dart'; 
 
-class ActivitiesDetailsScreen extends StatelessWidget {
+
+class ActivitiesDetailsScreen extends StatefulWidget {
   const ActivitiesDetailsScreen({super.key});
+
+  @override
+  _ActivitiesDetailsScreenState createState() => _ActivitiesDetailsScreenState();
+}
+
+class _ActivitiesDetailsScreenState extends State<ActivitiesDetailsScreen> {
+  int _selectedIndex = 1; // Inicializa el índice en "Home" (1)
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        _showInfoModal(context);
+        break;
+      case 1:
+        Navigator.pushNamed(context, '/home'); // Navegar a Home
+        break;
+      case 2:
+        Navigator.pushNamed(context, '/user_info'); // Navegar a la información del usuario
+        break;
+    }
+  }
+
+  void _showInfoModal(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Información'),
+          content: const Text('Esta es una aplicación de gestión de actividades.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cerrar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +89,7 @@ class ActivitiesDetailsScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 8.0),
                     ElevatedButton(
-                      onPressed: () => showAddBooleanActivityDialog(context, controller), // Llamada al modal
+                      onPressed: () => showAddBooleanActivityDialog(context, controller),
                       child: const Text('Añadir'),
                     ),
                   ],
@@ -95,7 +142,7 @@ class ActivitiesDetailsScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 8.0),
                     ElevatedButton(
-                      onPressed: () => showAddQuantitativeActivityDialog(context, controller), // Llamada al modal
+                      onPressed: () => showAddQuantitativeActivityDialog(context, controller),
                       child: const Text('Añadir'),
                     ),
                   ],
@@ -145,6 +192,10 @@ class ActivitiesDetailsScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BarraNavegacion(
+        selectedIndex: _selectedIndex, // El índice del ítem seleccionado
+        onItemTapped: _onItemTapped, // Manejo de la selección
       ),
     );
   }
