@@ -1,13 +1,19 @@
 import 'package:app_movil/controllers/activities_controller.dart';
 import 'package:app_movil/pages/home_page.dart';
-import 'package:app_movil/pages/user_page.dart'; 
-import 'package:app_movil/pages/activities_details.dart'; 
+import 'package:app_movil/pages/activities_details.dart';
+import 'package:app_movil/pages/login.dart';
+import 'package:app_movil/pages/signup.dart';
+import 'package:app_movil/pages/user_info.dart'; 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-void main() {
-  // Inicializar el controlador
+void main() async {
+  // Inicializamos el controlador
   Get.put(ActivitiesController());
+
+  //Inicializamos Firebase
+  WidgetsFlutterBinding.ensureInitialized();
+  //await Firebase.initializeApp();
 
   runApp(const MyApp());
 }
@@ -18,14 +24,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Mi App',
+      title: 'Fluxx',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       home: const HomePage(), // Página inicial
       routes: {
-        '/home': (context) => const HomePage(), 
-        '/user_info': (context) => const UserInfoPage(), 
+        '/login': (context) => LoginScreen(),
+        '/signup': (context) => SignUpScreen(),
+        '/home': (context) =>  const HomePage(), 
+        '/user_info': (context) => const UserPage(), 
         '/activities_details': (context) => const ActivitiesDetailsScreen(), 
       },
     );

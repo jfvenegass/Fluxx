@@ -1,18 +1,20 @@
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 33
+
+    defaultConfig {
+        applicationId "com.gestordetareas.app"
+        minSdkVersion 21
+        targetSdkVersion 33 
+        versionCode 1
+        versionName "1.0"
     }
 }
 
-rootProject.buildDir = "../build"
-subprojects {
-    project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-subprojects {
-    project.evaluationDependsOn(":app")
+dependencies {
+    implementation platform('com.google.firebase:firebase-bom:33.3.0') 
+    implementation 'com.google.firebase:firebase-analytics'
 }
 
-tasks.register("clean", Delete) {
-    delete rootProject.buildDir
-}
+apply plugin: 'com.google.gms.google-services'

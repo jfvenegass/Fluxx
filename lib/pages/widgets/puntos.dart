@@ -28,7 +28,7 @@ class PuntosWidget extends StatelessWidget {
         const SizedBox(height: 16.0),
         ElevatedButton(
           onPressed: () {
-            _showConfirmationDialog(context, controller);
+            showConfirmationDialog(context, controller);
           },
           child: const Text('Añadir puntos diarios al total'),
         ),
@@ -36,7 +36,7 @@ class PuntosWidget extends StatelessWidget {
     ));
   }
 
-  void _showConfirmationDialog(BuildContext context, ActivitiesController controller) {
+  void showConfirmationDialog(BuildContext context, ActivitiesController controller) {
     showDialog(
       context: context,
       builder: (BuildContext context) {

@@ -1,3 +1,4 @@
+import 'package:app_movil/pages/widgets/info_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:app_movil/pages/widgets/barra_navegacion.dart'; 
 import 'package:app_movil/controllers/activities_controller.dart';
@@ -12,50 +13,30 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  int _selectedIndex = 1; // Controlador de navegación, 1 es Home
+  int selectedIndex = 1; // Controlador de navegación, 1 es Home
 
-  void _onItemTapped(int index) {
+  void onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
+      selectedIndex = index;
     });
 
     switch (index) {
       case 0:
-        _showInfoModal(context);
+        showInfoModal(context);
         break;
       case 1:
         // Ya estamos en Home, no hace nada
         break;
       case 2:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const UserInfoPage()),
-        );
+        Navigator.pushNamed(
+            context, '/user_info');
         break;
     }
   }
 
-  void _showInfoModal(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Información'),
-          content: const Text('Esta es una aplicación de gestión de actividades.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cerrar'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  
 
-  void _showConfirmationDialog(BuildContext context, ActivitiesController controller) {
+  void showConfirmationDialog(BuildContext context, ActivitiesController controller) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -84,8 +65,7 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final ActivitiesController controller = Get.find(); // Asegúrate de que el controlador está inicializado
-
+    final ActivitiesController controller = Get.find();
     return Scaffold(
       appBar: AppBar(
         title: const Text('FLUXX'),
@@ -145,7 +125,7 @@ class HomePageState extends State<HomePage> {
                       const SizedBox(height: 16.0),
                       ElevatedButton(
                         onPressed: () {
-                          _showConfirmationDialog(context, controller); // Mostrar el diálogo de confirmación
+                          showConfirmationDialog(context, controller); // Mostrar el diálogo de confirmación
                         },
                         child: const Text('Añadir puntos diarios al total'),
                       ),
@@ -168,29 +148,12 @@ class HomePageState extends State<HomePage> {
         ),
       ),
       bottomNavigationBar: BarraNavegacion(
-        selectedIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
+        selectedIndex: selectedIndex,
+        onItemTapped: onItemTapped,
       ),
     );
   }
 }
 
 
-class UserInfoPage extends StatelessWidget {
-  const UserInfoPage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Información del Usuario'),
-      ),
-      body: const Center(
-        child: Text(
-          'Vista de información del usuario',
-          style: TextStyle(fontSize: 24),
-        ),
-      ),
-    );
-  }
-}
