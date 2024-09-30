@@ -1,5 +1,6 @@
+import 'package:app_movil/pages/home_page.dart';
+import 'package:app_movil/pages/signup.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
@@ -11,7 +12,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: const Text('Bienvenido a FLUXX'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -37,7 +38,11 @@ class LoginScreen extends StatelessWidget {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                // Lógica de autenticación aquí
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const HomePage()),
+                  );
               },
               child: const Text('Iniciar Sesión'),
             ),
@@ -45,13 +50,16 @@ class LoginScreen extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 // Navega a la pantalla de Sign Up
-                Get.toNamed('/signup');
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SignUpScreen()),
+                  );
               },
               child: const Text(
                 '¿No tienes cuenta? Regístrate aquí',
                 style: TextStyle(
                   color: Colors.blue,
-                  decoration: TextDecoration.underline,
                 ),
               ),
             ),

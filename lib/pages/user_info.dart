@@ -1,3 +1,4 @@
+import 'package:app_movil/pages/home_page.dart';
 import 'package:app_movil/pages/widgets/barra_navegacion.dart';
 import 'package:app_movil/pages/widgets/info_modal.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,11 @@ class UserPageState extends State<UserPage>{
         showInfoModal(context);
         break;
       case 1:
-        Navigator.pushNamed(context, '/home'); // Navegar a Home
+        Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const HomePage()),
+                  ); // Navegar a Home
         break;
       case 2:
         // Ya estamos en User Info, no hace nada

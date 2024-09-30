@@ -1,41 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:app_movil/controllers/activities_controller.dart';
-
-class PuntosWidget extends StatelessWidget {
-  const PuntosWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final ActivitiesController controller = Get.find();
-
-    return Obx(() => Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Puntos diarios: ${controller.dailyPoints}',
-          style: const TextStyle(
-            fontSize: 18,
-          ),
-        ),
-        const SizedBox(height: 8.0),
-        Text(
-          'Puntos totales: ${controller.totalPoints}',
-          style: const TextStyle(
-            fontSize: 18,
-          ),
-        ),
-        const SizedBox(height: 16.0),
-        ElevatedButton(
-          onPressed: () {
-            showConfirmationDialog(context, controller);
-          },
-          child: const Text('Añadir puntos diarios al total'),
-        ),
-      ],
-    ));
-  }
-
+  
   void showConfirmationDialog(BuildContext context, ActivitiesController controller) {
     showDialog(
       context: context,
@@ -65,4 +30,3 @@ class PuntosWidget extends StatelessWidget {
       },
     );
   }
-}

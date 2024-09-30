@@ -1,5 +1,5 @@
+import 'package:app_movil/pages/login.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class SignUpScreen extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
@@ -53,7 +53,11 @@ class SignUpScreen extends StatelessWidget {
             const SizedBox(height: 16),
             GestureDetector(
               onTap: () {
-                Get.back();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => LoginScreen()),
+                  );
               },
               child: const Text(
                 '¿Ya tienes cuenta? Inicia sesión aquí',

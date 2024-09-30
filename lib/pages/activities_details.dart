@@ -1,4 +1,6 @@
 import 'package:app_movil/controllers/activities_controller.dart';
+import 'package:app_movil/pages/home_page.dart';
+import 'package:app_movil/pages/user_info.dart';
 import 'package:app_movil/pages/widgets/activities_modales.dart';
 import 'package:app_movil/pages/widgets/info_modal.dart';
 import 'package:flutter/material.dart';
@@ -25,11 +27,18 @@ class ActivitiesDetailsScreenState extends State<ActivitiesDetailsScreen> {
         showInfoModal(context);
         break;
       case 1:
-        Navigator.pushNamed(context, '/home'); // Navegar a Home
+        Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const HomePage()),
+                  ); // Navegar a Home
         break;
       case 2:
-        Navigator.pushNamed(
-            context, '/user_info'); // Navegar a la información del usuario
+        Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const UserPage()),
+                  ); // Navegar a la información del usuario
         break;
     }
   }
