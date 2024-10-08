@@ -29,8 +29,7 @@ class HomePageState extends State<HomePage> {
         // Ya estamos en Home, no hace nada
         break;
       case 2:
-        Navigator.pushNamed(
-            context, '/user_info');
+        Navigator.pushNamed(context, '/user_info');
         break;
     }
   }
@@ -41,6 +40,7 @@ class HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('FLUXX'),
+        automaticallyImplyLeading: false, // Esto desactiva la flecha de retroceso en el AppBar
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -57,52 +57,52 @@ class HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 16.0),
               Obx(() => Text(
-                    'Actividades totales: ${controller.totalActivities}',
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )),
+                'Actividades totales: ${controller.totalActivities}',
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              )),
               const SizedBox(height: 16.0),
               Obx(() => Text(
-                    'Actividades booleanas chequeadas: ${controller.checkedBooleanActivities}',
-                    style: const TextStyle(
-                      fontSize: 18,
-                    ),
-                  )),
+                'Actividades booleanas chequeadas: ${controller.checkedBooleanActivities}',
+                style: const TextStyle(
+                  fontSize: 18,
+                ),
+              )),
               const SizedBox(height: 16.0),
               Obx(() => Text(
-                    'Actividades cuantitativas realizadas al menos una vez: ${controller.completedQuantitativeActivities}',
-                    style: const TextStyle(
-                      fontSize: 18,
-                    ),
-                  )),
+                'Actividades cuantitativas realizadas al menos una vez: ${controller.completedQuantitativeActivities}',
+                style: const TextStyle(
+                  fontSize: 18,
+                ),
+              )),
               const SizedBox(height: 16.0),
               Obx(() => Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Puntos diarios: ${controller.dailyPoints}',
-                        style: const TextStyle(
-                          fontSize: 18,
-                        ),
-                      ),
-                      const SizedBox(height: 8.0),
-                      Text(
-                        'Puntos totales: ${controller.totalPoints}',
-                        style: const TextStyle(
-                          fontSize: 18,
-                        ),
-                      ),
-                      const SizedBox(height: 16.0),
-                      ElevatedButton(
-                        onPressed: () {
-                          showConfirmationDialog(context, controller);
-                        },
-                        child: const Text('Añadir puntos diarios al total'),
-                      ),
-                    ],
-                  )),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Puntos diarios: ${controller.dailyPoints}',
+                    style: const TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                  const SizedBox(height: 8.0),
+                  Text(
+                    'Puntos totales: ${controller.totalPoints}',
+                    style: const TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                  const SizedBox(height: 16.0),
+                  ElevatedButton(
+                    onPressed: () {
+                      showConfirmationDialog(context, controller);
+                    },
+                    child: const Text('Añadir puntos diarios al total'),
+                  ),
+                ],
+              )),
               const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () {
@@ -110,7 +110,8 @@ class HomePageState extends State<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const ActivitiesDetailsScreen()),
+                      builder: (context) => const ActivitiesDetailsScreen(),
+                    ),
                   );
                 },
                 child: const Text('Detalles'),
@@ -126,6 +127,7 @@ class HomePageState extends State<HomePage> {
     );
   }
 }
+
 
 
 
