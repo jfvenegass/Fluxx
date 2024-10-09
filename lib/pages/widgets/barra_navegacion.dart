@@ -28,7 +28,11 @@ class BarraNavegacion extends StatelessWidget {
         ),
       ],
       currentIndex: selectedIndex,
-      onTap: onItemTapped,
+      onTap: (index) {
+        // Llama a la función proporcionada para manejar el cambio de índice
+        onItemTapped(index);
+      },
     );
   }
 }
+

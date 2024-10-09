@@ -17,10 +17,22 @@ class HomePageState extends State<HomePage> {
   int selectedIndex = 1; // Controlador de navegación, 1 es Home
 
   void onItemTapped(int index) {
-    setState(() {
-      selectedIndex = index;
-    });
+  setState(() {
+    selectedIndex = index;
+  });
+
+  switch (index) {
+    case 0:
+      showInfoModal(context); // Muestra el modal de información
+      break;
+    case 1:
+      // Estamos en Home, así que no necesitamos hacer nada especial aquí.
+      break;
+    case 2:
+      Navigator.pushNamed(context, '/user_info'); // Navega a la pantalla de información del usuario.
+      break;
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -100,9 +112,8 @@ class HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          // Contenedor para la sección de detalles con scroll independiente
           Container(
-            height: 300, // Ajusta la altura según lo necesario
+            height: 300, // Altura ajustable.
             child: ActivitiesDetails(
               controller: controller,
             ),
