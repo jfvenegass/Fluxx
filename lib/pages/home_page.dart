@@ -9,7 +9,7 @@ import 'package:app_movil/controllers/user.dart'; // Importa el modelo de usuari
 import 'package:app_movil/controllers/user_service.dart'; // Importa el servicio de usuario
 import 'package:app_movil/pages/widgets/daily_bonus_screen.dart'; // Importa la pantalla de bonificación diaria
 import 'package:app_movil/colors.dart'; // Importa los colores
-import 'user_info_screen.dart'; // Importa la pantalla de información del usuario
+import 'package:app_movil/pages/user_info_screen.dart'; // Importa la pantalla de información del usuario
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -60,7 +60,7 @@ class HomePageState extends State<HomePage> {
       case 2:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => UserInfoScreen()),
+          MaterialPageRoute(builder: (context) => const UserInfoScreen()), // Asegúrate de usar la clase correcta
         );
         break;
     }
@@ -97,6 +97,7 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final ActivitiesController controller = Get.find();
+    final User user = Get.find(); // Obtén el usuario actual
     return Scaffold(
       appBar: AppBar(
         title: const Text('FLUXX'),
@@ -181,6 +182,15 @@ class HomePageState extends State<HomePage> {
                   );
                 },
                 child: const Text('Detalles'),
+              ),
+              const SizedBox(height: 16.0),
+              Text(
+                'Racha diaria: ${user.streak} días',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: primaryColor,
+                ),
               ),
             ],
           ),
