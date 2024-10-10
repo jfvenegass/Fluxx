@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:app_movil/pages/widgets/info_modal.dart';
-import 'package:app_movil/pages/widgets/barra_navegacion.dart'; 
+import 'package:app_movil/pages/widgets/barra_navegacion.dart';
 import 'package:app_movil/controllers/activities_controller.dart';
-import 'package:app_movil/pages/widgets/puntos.dart';
 import 'package:app_movil/pages/widgets/activities_details.dart';
+import 'package:app_movil/pages/widgets/activities_modales.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,25 +13,85 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  int selectedIndex = 1; // Controlador de navegación, 1 es Home
+  int selectedIndex = 1;
 
   void onItemTapped(int index) {
-  setState(() {
-    selectedIndex = index;
-  });
+    setState(() {
+      selectedIndex = index;
+    });
 
-  switch (index) {
-    case 0:
-      showInfoModal(context); // Muestra el modal de información
-      break;
-    case 1:
-      // Estamos en Home, así que no necesitamos hacer nada especial aquí.
-      break;
-    case 2:
-      Navigator.pushNamed(context, '/user_info'); // Navega a la pantalla de información del usuario.
-      break;
+    switch (index) {
+      case 0:
+        showAddActivityModal();
+        break;
+      case 1:
+        // Estamos en Home.
+        break;
+      case 2:
+        Navigator.pushNamed(context, '/user_info');
+        break;
+    }
   }
-}
+
+  void showAddActivityModal() {
+    final ActivitiesController controller = Get.find();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Añadir Actividad'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: const Text('Actividades Cuantitativas'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  showAddQuantitativeActivityDialog(context, controller);
+                },
+              ),
+              ListTile(
+                title: const Text('Actividades Booleanas'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  showAddBooleanActivityDialog(context, controller);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void showConfirmationDialog(BuildContext context, ActivitiesController controller) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmar'),
+          content: const Text('¿Deseas añadir los puntos diarios al total?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Cerrar el diálogo.
+              },
+              child: const Text('Cancelar'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                controller.addDailyPointsToTotal();
+                controller.resetDailyPoints();
+                Navigator.of(context).pop(); // Cerrar el diálogo.
+              },
+              child: const Text('Añadir'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,8 +182,12 @@ class HomePageState extends State<HomePage> {
       bottomNavigationBar: BarraNavegacion(
         selectedIndex: selectedIndex,
         onItemTapped: onItemTapped,
+        onAddButtonPressed: showAddActivityModal,
       ),
     );
   }
 }
+
+
+
     

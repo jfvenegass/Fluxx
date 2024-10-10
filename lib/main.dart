@@ -1,6 +1,5 @@
 import 'package:app_movil/controllers/activities_controller.dart';
 import 'package:app_movil/pages/home_page.dart';
-import 'package:app_movil/pages/activities_details.dart';
 import 'package:app_movil/pages/login.dart';
 import 'package:app_movil/pages/signup.dart';
 import 'package:app_movil/pages/user_info.dart'; 
@@ -34,7 +33,6 @@ class MyApp extends StatelessWidget {
         '/signup': (context) => SignUpScreen(),
         '/home': (context) =>  const HomePage(), 
         '/user_info': (context) => const UserPage(), 
-        '/activities_details': (context) => const ActivitiesDetailsScreen(), 
       },
     );
   }

@@ -186,10 +186,7 @@ class ActivitiesDetailsScreenState extends State<ActivitiesDetailsScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BarraNavegacion(
-        selectedIndex: selectedIndex, // El índice del ítem seleccionado
-        onItemTapped: onItemTapped, // Manejo de la selección
-      ),
+      
     );
   }
 }
