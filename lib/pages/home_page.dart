@@ -5,6 +5,11 @@ import 'package:app_movil/controllers/activities_controller.dart';
 import 'activities_details.dart';
 import 'package:get/get.dart';
 import 'package:app_movil/pages/widgets/puntos.dart';
+import 'package:app_movil/controllers/user.dart'; // Importa el modelo de usuario
+import 'package:app_movil/controllers/user_service.dart'; // Importa el servicio de usuario
+import 'package:app_movil/pages/widgets/daily_bonus_screen.dart'; // Importa la pantalla de bonificación diaria
+import 'package:app_movil/colors.dart'; // Importa los colores
+import 'user_info_screen.dart'; // Importa la pantalla de información del usuario
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,6 +20,30 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   int selectedIndex = 1; // Controlador de navegación, 1 es Home
+
+  @override
+  void initState() {
+    super.initState();
+    final User user = Get.find(); // Obtén el usuario actual
+    onUserLogin(user); // Actualiza la racha diaria del usuario
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showDailyBonus(context, user.dailyBonus); // Muestra las recompensas diarias
+      if (!user.dailyBonus.doubled) {
+        offerDoubleBonus(context, user); // Ofrece la opción de doblar las recompensas
+      }
+      showStreakModal(context, user.streak); // Muestra el modal de racha
+    });
+  }
+
+  void onUserLogin(User user) {
+    user.updateStreak(); // Actualiza la racha diaria del usuario
+    updateDailyStreak(user); // Llama a la función para actualizar la racha diaria
+  }
+
+  void updateDailyStreak(User user) {
+    // Aquí puedes añadir la lógica para actualizar la racha diaria del usuario
+    // Por ejemplo, podrías guardar la racha en una base de datos o en preferencias compartidas
+  }
 
   void onItemTapped(int index) {
     setState(() {
@@ -29,8 +58,39 @@ class HomePageState extends State<HomePage> {
         // Ya estamos en Home, no hace nada
         break;
       case 2:
-        Navigator.pushNamed(context, '/user_info');
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => UserInfoScreen()),
+        );
         break;
+    }
+  }
+
+  void showStreakModal(BuildContext context, int streak) {
+    if (streak % 10 == 0) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('¡Felicidades!'),
+            content: Text('Llevas una racha de $streak días. ¡Sigue así!'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Aceptar'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Tienes una racha de $streak días.'),
+        ),
+      );
     }
   }
 
@@ -53,6 +113,7 @@ class HomePageState extends State<HomePage> {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
+                  color: primaryColor,
                 ),
               ),
               const SizedBox(height: 16.0),
@@ -61,6 +122,7 @@ class HomePageState extends State<HomePage> {
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
+                  color: textColor,
                 ),
               )),
               const SizedBox(height: 16.0),
@@ -68,6 +130,7 @@ class HomePageState extends State<HomePage> {
                 'Actividades booleanas chequeadas: ${controller.checkedBooleanActivities}',
                 style: const TextStyle(
                   fontSize: 18,
+                  color: secondaryTextColor,
                 ),
               )),
               const SizedBox(height: 16.0),
@@ -75,6 +138,7 @@ class HomePageState extends State<HomePage> {
                 'Actividades cuantitativas realizadas al menos una vez: ${controller.completedQuantitativeActivities}',
                 style: const TextStyle(
                   fontSize: 18,
+                  color: secondaryTextColor,
                 ),
               )),
               const SizedBox(height: 16.0),
@@ -85,6 +149,7 @@ class HomePageState extends State<HomePage> {
                     'Puntos diarios: ${controller.dailyPoints}',
                     style: const TextStyle(
                       fontSize: 18,
+                      color: textColor,
                     ),
                   ),
                   const SizedBox(height: 8.0),
@@ -92,6 +157,7 @@ class HomePageState extends State<HomePage> {
                     'Puntos totales: ${controller.totalPoints}',
                     style: const TextStyle(
                       fontSize: 18,
+                      color: textColor,
                     ),
                   ),
                   const SizedBox(height: 16.0),
@@ -127,7 +193,3 @@ class HomePageState extends State<HomePage> {
     );
   }
 }
-
-
-
-
