@@ -1,3 +1,4 @@
+import 'package:app_movil/pages/user_info.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:app_movil/pages/widgets/barra_navegacion.dart';
@@ -28,6 +29,10 @@ class HomePageState extends State<HomePage> {
         // Estamos en Home.
         break;
       case 2:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const UserPage()),
+        );
         break;
     }
   }
@@ -64,7 +69,8 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  void showConfirmationDialog(BuildContext context, ActivitiesController controller) {
+  void showConfirmationDialog(
+      BuildContext context, ActivitiesController controller) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -103,44 +109,37 @@ class HomePageState extends State<HomePage> {
       ),
       body: Column(
         children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Fluxx',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 16.0),
-                    Obx(() => Text(
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 16.0),
+                Obx(() => Text(
                       'Actividades totales: ${controller.totalActivities}',
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     )),
-                    const SizedBox(height: 16.0),
-                    Obx(() => Text(
+                const SizedBox(height: 16.0),
+                Obx(() => Text(
                       'Actividades booleanas chequeadas: ${controller.checkedBooleanActivities}',
                       style: const TextStyle(
                         fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
                     )),
-                    const SizedBox(height: 16.0),
-                    Obx(() => Text(
+                const SizedBox(height: 16.0),
+                Obx(() => Text(
                       'Actividades cuantitativas realizadas al menos una vez: ${controller.completedQuantitativeActivities}',
                       style: const TextStyle(
                         fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
                     )),
-                    const SizedBox(height: 16.0),
-                    Obx(() => Column(
+                const SizedBox(height: 16.0),
+                Obx(() => Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
@@ -165,13 +164,11 @@ class HomePageState extends State<HomePage> {
                         ),
                       ],
                     )),
-                  ],
-                ),
-              ),
+              ],
             ),
           ),
-          SizedBox(
-            height: 300, // Altura ajustable.
+          // Usar Expanded para la lista de actividades
+          Expanded(
             child: ActivitiesDetails(
               controller: controller,
             ),
@@ -186,7 +183,3 @@ class HomePageState extends State<HomePage> {
     );
   }
 }
-
-
-
-    

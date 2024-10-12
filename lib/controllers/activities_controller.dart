@@ -1,6 +1,9 @@
 import 'package:get/get.dart';
 
 class ActivitiesController extends GetxController {
+  // Constantes
+  static const int pointsPerBooleanActivity = 3;
+
   // Lista de actividades booleanas (nombre y si está chequeada o no)
   final booleanActivities = [
     {'Ejercicio matutino': false},
@@ -41,20 +44,17 @@ class ActivitiesController extends GetxController {
 
   // Añadir una nueva actividad booleana
   void addBooleanActivity(String activityName) {
-    booleanActivities.add({activityName: false});
+    if (activityName.isNotEmpty && !booleanActivities.any((activity) => activity.keys.first == activityName)) {
+      booleanActivities.add({activityName: false});
+    }
   }
 
   // Eliminar una actividad booleana
   void removeBooleanActivity(int index) {
-    // Si la actividad estaba chequeada, restamos sus puntos antes de eliminarla
-    final activity = booleanActivities[index];
-    if (activity.values.first) {
-      dailyPoints.value -= 3;
+    if (booleanActivities[index].values.first) {
+      dailyPoints.value -= pointsPerBooleanActivity;
     }
-
     booleanActivities.removeAt(index);
-
-    // Recalcular puntos
     _updatePoints();
   }
 
@@ -63,28 +63,24 @@ class ActivitiesController extends GetxController {
     final activity = booleanActivities[index];
     final key = activity.keys.first;
     booleanActivities[index] = {key: !activity[key]!};
-
-    // Recalcular puntos
     _updatePoints();
   }
 
   // Añadir una nueva actividad cuantitativa
   void addQuantitativeActivity(String activityName, int initialCount) {
-    quantitativeActivities.add({
-      activityName: {'initial': initialCount, 'current': 0}
-    });
+    if (activityName.isNotEmpty && !quantitativeActivities.any((activity) => activity.keys.first == activityName)) {
+      quantitativeActivities.add({
+        activityName: {'initial': initialCount, 'current': 0}
+      });
+    }
   }
 
   // Eliminar una actividad cuantitativa
   void removeQuantitativeActivity(int index) {
-    // Restar los puntos aportados por la actividad antes de eliminarla
     final activity = quantitativeActivities[index];
     final currentCount = activity.values.first['current']!;
     dailyPoints.value -= currentCount; // Restamos las veces que se ha realizado
-
     quantitativeActivities.removeAt(index);
-
-    // Recalcular puntos
     _updatePoints();
   }
 
@@ -96,8 +92,6 @@ class ActivitiesController extends GetxController {
     quantitativeActivities[index] = {
       key: {'initial': activity[key]!['initial']!, 'current': currentCount + 1}
     };
-
-    // Recalcular puntos
     _updatePoints();
   }
 
@@ -114,16 +108,13 @@ class ActivitiesController extends GetxController {
         }
       };
     }
-
-    // Recalcular puntos
     _updatePoints();
   }
 
   // Actualizar los puntajes diarios
   void _updatePoints() {
-    // Calcular los puntos diarios
     int newDailyPoints =
-        (checkedBooleanActivities * 3) + totalQuantitativeActivityCount;
+        (checkedBooleanActivities * pointsPerBooleanActivity) + totalQuantitativeActivityCount;
     dailyPoints.value = newDailyPoints;
   }
 
@@ -139,11 +130,7 @@ class ActivitiesController extends GetxController {
 
   // Método para reiniciar las actividades booleanas (desmarcar todas)
   void resetBooleanActivities() {
-    for (var i = 0; i < booleanActivities.length; i++) {
-      final activity = booleanActivities[i];
-      final key = activity.keys.first;
-      booleanActivities[i] = {key: false};
-    }
+    resetActivities(booleanActivities, false);
   }
 
   // Método para reiniciar las actividades cuantitativas (poner en 0 las actuales)
@@ -160,16 +147,20 @@ class ActivitiesController extends GetxController {
     }
   }
 
+  // Método para reiniciar las actividades
+  void resetActivities<T>(RxList<Map<String, T>> activities, T defaultValue) {
+    for (var i = 0; i < activities.length; i++) {
+      final activity = activities[i];
+      final key = activity.keys.first;
+      activities[i] = {key: defaultValue};
+    }
+  }
+
   // Método para añadir los puntos diarios al total y reiniciar las actividades
   void addDailyPointsToTotalAndResetActivities() {
-    // Añadir los puntos diarios al total
     addDailyPointsToTotal();
-
-    // Resetear las actividades booleanas y cuantitativas
     resetBooleanActivities();
     resetQuantitativeActivities();
-
-    // Resetear los puntos diarios
     resetDailyPoints();
   }
 }
