@@ -13,6 +13,8 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  final ActivitiesController controller = Get.find<ActivitiesController>();
+
   int selectedIndex = 1;
 
   void onItemTapped(int index) {
@@ -34,8 +36,6 @@ class HomePageState extends State<HomePage> {
   }
 
   void showAddActivityModal() {
-    final ActivitiesController controller = Get.find();
-
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -82,6 +82,7 @@ class HomePageState extends State<HomePage> {
             ElevatedButton(
               onPressed: () {
                 controller.addDailyPointsToTotal();
+                controller.incrementStreak(); // Incrementar la racha
                 controller.resetDailyPoints();
                 Navigator.of(context).pop(); // Cerrar el diálogo.
               },
@@ -95,11 +96,9 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final ActivitiesController controller = Get.find();
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('FLUXX'),
+        title: const Text('Fluxx'),
         automaticallyImplyLeading: false,
       ),
       body: Column(
@@ -158,6 +157,20 @@ class HomePageState extends State<HomePage> {
                           ),
                         ),
                         const SizedBox(height: 16.0),
+                        Text(
+                          'Racha actual: ${controller.currentStreak} días',
+                          style: const TextStyle(
+                            fontSize: 18,
+                          ),
+                        ),
+                        const SizedBox(height: 8.0),
+                        Text(
+                          'Racha máxima: ${controller.maxStreak} días',
+                          style: const TextStyle(
+                            fontSize: 18,
+                          ),
+                        ),
+                        const SizedBox(height: 16.0),
                         ElevatedButton(
                           onPressed: () {
                             showConfirmationDialog(context, controller);
@@ -187,7 +200,3 @@ class HomePageState extends State<HomePage> {
     );
   }
 }
-
-
-
-    

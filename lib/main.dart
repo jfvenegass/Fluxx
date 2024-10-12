@@ -10,29 +10,48 @@ void main() async {
   // Inicializamos el controlador
   Get.put(ActivitiesController());
 
-  //Inicializamos Firebase
+  // Inicializamos Firebase
   WidgetsFlutterBinding.ensureInitialized();
-  //await Firebase.initializeApp();
+  // await Firebase.initializeApp();
 
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Fluxx',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.teal,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        textTheme: TextTheme(
+          headlineLarge: TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold, color: Colors.teal[800]),
+          titleLarge: TextStyle(fontSize: 20.0, fontStyle: FontStyle.italic, color: Colors.teal[600]),
+          bodyMedium: TextStyle(fontSize: 14.0, fontFamily: 'Hind', color: Colors.teal[900]),
+        ),
+        appBarTheme: AppBarTheme(
+          color: Colors.teal[700],
+          titleTextStyle: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+        buttonTheme: ButtonThemeData(
+          buttonColor: Colors.teal[600],
+          textTheme: ButtonTextTheme.primary,
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.teal[600],
+            foregroundColor: Colors.white,
+            textStyle: TextStyle(fontSize: 16.0),
+          ),
+        ),
       ),
       home: LoginScreen(), // Página inicial
       routes: {
         '/login': (context) => LoginScreen(),
         '/signup': (context) => SignUpScreen(),
-        '/home': (context) =>  const HomePage(), 
-        '/user_info': (context) => const UserPage(), 
+        '/home': (context) => HomePage(), 
+        '/user_info': (context) => UserPage(), 
       },
     );
   }

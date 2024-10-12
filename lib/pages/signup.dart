@@ -12,35 +12,47 @@ class SignUpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sign Up'),
+        title: const Text('Crear Cuenta'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const Text(
+              'Crear una nueva cuenta',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.teal,
+              ),
+            ),
+            const SizedBox(height: 20),
             TextField(
               controller: nameController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Nombre',
                 border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.person, color: Colors.teal),
               ),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: emailController,
-              decoration: const InputDecoration(
-                labelText: 'Email',
+              decoration: InputDecoration(
+                labelText: 'Correo Electrónico',
                 border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.email, color: Colors.teal),
               ),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: passwordController,
               obscureText: true,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Contraseña',
                 border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.lock, color: Colors.teal),
               ),
             ),
             const SizedBox(height: 16),
@@ -48,20 +60,29 @@ class SignUpScreen extends StatelessWidget {
               onPressed: () {
                 // Aquí puedes añadir la lógica de registro
               },
-              child: const Text('Sign Up'),
+              child: const Text('Registrarse'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.teal,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                textStyle: const TextStyle(fontSize: 18),
+              ),
             ),
             const SizedBox(height: 16),
             GestureDetector(
               onTap: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => LoginScreen()),
-                  );
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                );
               },
               child: const Text(
                 '¿Ya tienes cuenta? Inicia sesión aquí',
-                style: TextStyle(color: Colors.blue),
+                style: TextStyle(
+                  color: Colors.teal,
+                  fontSize: 16,
+                  decoration: TextDecoration.underline,
+                ),
               ),
             ),
           ],

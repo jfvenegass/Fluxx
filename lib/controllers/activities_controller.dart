@@ -21,6 +21,10 @@ class ActivitiesController extends GetxController {
   var dailyPoints = 0.obs; // Puntos obtenidos en el día
   var totalPoints = 0.obs; // Puntos acumulados (inicialmente en 0)
 
+  // Racha
+  var currentStreak = 0.obs; // Racha actual de días consecutivos
+  var maxStreak = 0.obs; // Racha máxima alcanzada
+
   // Método para contar el total de actividades (booleanas + cuantitativas)
   int get totalActivities =>
       booleanActivities.length + quantitativeActivities.length;
@@ -165,11 +169,27 @@ class ActivitiesController extends GetxController {
     // Añadir los puntos diarios al total
     addDailyPointsToTotal();
 
+    // Incrementar la racha
+    incrementStreak();
+
     // Resetear las actividades booleanas y cuantitativas
     resetBooleanActivities();
     resetQuantitativeActivities();
 
     // Resetear los puntos diarios
     resetDailyPoints();
+  }
+
+  // Incrementar la racha
+  void incrementStreak() {
+    currentStreak.value++;
+    if (currentStreak.value > maxStreak.value) {
+      maxStreak.value = currentStreak.value;
+    }
+  }
+
+  // Resetear la racha
+  void resetStreak() {
+    currentStreak.value = 0;
   }
 }
