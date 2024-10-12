@@ -171,7 +171,7 @@ class HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          Container(
+          SizedBox(
             height: 300, // Altura ajustable.
             child: ActivitiesDetails(
               controller: controller,
