@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class BarraNavegacion extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onItemTapped;
+  final VoidCallback onAddButtonPressed;
 
   const BarraNavegacion({
     super.key,
     required this.selectedIndex,
     required this.onItemTapped,
+    required this.onAddButtonPressed,
   });
 
   @override
@@ -15,8 +17,8 @@ class BarraNavegacion extends StatelessWidget {
     return BottomNavigationBar(
       items: const [
         BottomNavigationBarItem(
-          icon: Icon(Icons.help_outline),
-          label: 'Info',
+          icon: Icon(Icons.add),
+          label: 'Añadir',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
@@ -28,7 +30,15 @@ class BarraNavegacion extends StatelessWidget {
         ),
       ],
       currentIndex: selectedIndex,
-      onTap: onItemTapped,
+      onTap: (index) {
+        if (index == 0) {
+          onAddButtonPressed();
+        } else {
+          onItemTapped(index);
+        }
+      },
     );
   }
 }
+
+
