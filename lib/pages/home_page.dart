@@ -29,7 +29,6 @@ class HomePageState extends State<HomePage> {
         // Ya estamos en Home, no hace nada
         break;
       case 2:
-        Navigator.pushNamed(context, '/user_info');
         break;
     }
   }
