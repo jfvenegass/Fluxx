@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:app_movil/pages/home_page.dart';
 import 'package:app_movil/pages/widgets/barra_navegacion.dart';
-import 'package:app_movil/pages/widgets/activities_modales.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({super.key});
