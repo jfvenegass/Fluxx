@@ -75,8 +75,8 @@ class UserPageState extends State<UserPage> {
         onItemTapped: onItemTapped,
         onAddButtonPressed: showAddActivityModal,
       ),
-      body: Center(
-        child: const Text('Contenido de la información del usuario'),
+      body: const Center(
+        child: Text('Contenido de la información del usuario'),
       ),
     );
   }

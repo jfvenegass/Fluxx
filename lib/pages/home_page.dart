@@ -109,76 +109,66 @@ class HomePageState extends State<HomePage> {
       ),
       body: Column(
         children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Fluxx',
-                      style: TextStyle(
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 16.0),
+                Obx(() => Text(
+                      'Actividades totales: ${controller.totalActivities}',
+                      style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
-                    ),
-                    const SizedBox(height: 16.0),
-                    Obx(() => Text(
-                          'Actividades totales: ${controller.totalActivities}',
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )),
-                    const SizedBox(height: 16.0),
-                    Obx(() => Text(
-                          'Actividades booleanas chequeadas: ${controller.checkedBooleanActivities}',
+                    )),
+                const SizedBox(height: 16.0),
+                Obx(() => Text(
+                      'Actividades booleanas chequeadas: ${controller.checkedBooleanActivities}',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )),
+                const SizedBox(height: 16.0),
+                Obx(() => Text(
+                      'Actividades cuantitativas realizadas al menos una vez: ${controller.completedQuantitativeActivities}',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )),
+                const SizedBox(height: 16.0),
+                Obx(() => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Puntos diarios: ${controller.dailyPoints}',
                           style: const TextStyle(
                             fontSize: 18,
                           ),
-                        )),
-                    const SizedBox(height: 16.0),
-                    Obx(() => Text(
-                          'Actividades cuantitativas realizadas al menos una vez: ${controller.completedQuantitativeActivities}',
+                        ),
+                        const SizedBox(height: 8.0),
+                        Text(
+                          'Puntos totales: ${controller.totalPoints}',
                           style: const TextStyle(
                             fontSize: 18,
                           ),
-                        )),
-                    const SizedBox(height: 16.0),
-                    Obx(() => Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Puntos diarios: ${controller.dailyPoints}',
-                              style: const TextStyle(
-                                fontSize: 18,
-                              ),
-                            ),
-                            const SizedBox(height: 8.0),
-                            Text(
-                              'Puntos totales: ${controller.totalPoints}',
-                              style: const TextStyle(
-                                fontSize: 18,
-                              ),
-                            ),
-                            const SizedBox(height: 16.0),
-                            ElevatedButton(
-                              onPressed: () {
-                                showConfirmationDialog(context, controller);
-                              },
-                              child:
-                                  const Text('Añadir puntos diarios al total'),
-                            ),
-                          ],
-                        )),
-                  ],
-                ),
-              ),
+                        ),
+                        const SizedBox(height: 16.0),
+                        ElevatedButton(
+                          onPressed: () {
+                            showConfirmationDialog(context, controller);
+                          },
+                          child: const Text('Añadir puntos diarios al total'),
+                        ),
+                      ],
+                    )),
+              ],
             ),
           ),
-          SizedBox(
-            height: 300, // Altura ajustable.
+          // Usar Expanded para la lista de actividades
+          Expanded(
             child: ActivitiesDetails(
               controller: controller,
             ),
