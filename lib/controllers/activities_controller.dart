@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ActivitiesController extends GetxController {
   // Constantes
@@ -25,6 +26,12 @@ class ActivitiesController extends GetxController {
   var dailyPoints = 0.obs; // Puntos obtenidos en el día
   var totalPoints = 0.obs; // Puntos acumulados (inicialmente en 0)
   var streak = 0.obs; // Racha de días consecutivos
+
+  @override
+  void onInit() {
+    super.onInit();
+    _checkStreak();
+  }
 
   // Método para contar el total de actividades (booleanas + cuantitativas)
   int get totalActivities =>
@@ -165,6 +172,7 @@ class ActivitiesController extends GetxController {
     resetQuantitativeActivities();
     resetDailyPoints();
     incrementStreak(context);
+    _saveLastActiveDate();
   }
 
   // Método para incrementar la racha
@@ -199,5 +207,24 @@ class ActivitiesController extends GetxController {
   // Método para reiniciar la racha
   void resetStreak() {
     streak.value = 0;
+  }
+
+  // Método para guardar la última fecha activa
+  Future<void> _saveLastActiveDate() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('lastActiveDate', DateTime.now().toIso8601String());
+  }
+
+  // Método para verificar la racha
+  Future<void> _checkStreak() async {
+    final prefs = await SharedPreferences.getInstance();
+    final lastActiveDateStr = prefs.getString('lastActiveDate');
+    if (lastActiveDateStr != null) {
+      final lastActiveDate = DateTime.parse(lastActiveDateStr);
+      final now = DateTime.now();
+      if (now.difference(lastActiveDate).inDays >= 1) {
+        resetStreak();
+      }
+    }
   }
 }
