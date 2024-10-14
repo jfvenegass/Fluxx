@@ -75,8 +75,53 @@ class UserPageState extends State<UserPage> {
         onItemTapped: onItemTapped,
         onAddButtonPressed: showAddActivityModal,
       ),
-      body: const Center(
-        child: Text('Contenido de la información del usuario'),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: CircleAvatar(
+                radius: 50,
+                backgroundImage: AssetImage('assets/user_avatar.png'), // Imagen de perfil
+              ),
+            ),
+            const SizedBox(height: 20),
+            Center(
+              child: Text(
+                'Nombre del Usuario',
+                style: Theme.of(context).textTheme.headlineLarge,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Correo Electrónico:',
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            const SizedBox(height: 5),
+            Text(
+              'usuario@correo.com',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Hábitos Saludables:',
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            const SizedBox(height: 5),
+            Text(
+              'Desayunar: Sí\nBeber Agua: 8 vasos\nEjercicio: 30 minutos',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                // Acción para editar perfil
+              },
+              child: const Text('Editar Perfil'),
+            ),
+          ],
+        ),
       ),
     );
   }

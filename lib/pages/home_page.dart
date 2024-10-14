@@ -5,6 +5,7 @@ import 'package:app_movil/pages/widgets/barra_navegacion.dart';
 import 'package:app_movil/controllers/activities_controller.dart';
 import 'package:app_movil/pages/widgets/activities_details.dart';
 import 'package:app_movil/pages/widgets/activities_modales.dart';
+import 'package:app_movil/pages/login.dart'; // Asegúrate de importar LoginScreen
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -86,9 +87,8 @@ class HomePageState extends State<HomePage> {
             ),
             ElevatedButton(
               onPressed: () {
-                controller.addDailyPointsToTotal();
-                controller.resetDailyPoints();
-                Navigator.of(context).pop(); // Cerrar el diálogo.
+                Navigator.of(context).pop(); // Cerrar el diálogo de confirmación
+                controller.addDailyPointsToTotalAndResetActivities(context);
               },
               child: const Text('Añadir'),
             ),
@@ -107,6 +107,55 @@ class HomePageState extends State<HomePage> {
         title: const Text('FLUXX'),
         automaticallyImplyLeading: false,
       ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.green,
+              ),
+              child: Text(
+                'Menú',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.home),
+              title: const Text('Inicio'),
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomePage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('Perfil'),
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const UserPage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Cerrar Sesión'),
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
       body: Column(
         children: [
           Padding(
@@ -114,6 +163,18 @@ class HomePageState extends State<HomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    StreakWidget(),
+                    ElevatedButton(
+                      onPressed: () {
+                        showConfirmationDialog(context, controller);
+                      },
+                      child: const Text('Añadir puntos diarios al total'),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 16.0),
                 Obx(() => Text(
                       'Actividades totales: ${controller.totalActivities}',
@@ -155,13 +216,6 @@ class HomePageState extends State<HomePage> {
                             fontSize: 18,
                           ),
                         ),
-                        const SizedBox(height: 16.0),
-                        ElevatedButton(
-                          onPressed: () {
-                            showConfirmationDialog(context, controller);
-                          },
-                          child: const Text('Añadir puntos diarios al total'),
-                        ),
                       ],
                     )),
               ],
@@ -181,5 +235,26 @@ class HomePageState extends State<HomePage> {
         onAddButtonPressed: showAddActivityModal,
       ),
     );
+  }
+}
+
+class StreakWidget extends StatelessWidget {
+  final controller = Get.find<ActivitiesController>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() => Row(
+      children: [
+        const Icon(Icons.local_fire_department, color: Colors.red, size: 24),
+        const SizedBox(width: 4.0),
+        Text(
+          '${controller.streak}',
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    ));
   }
 }

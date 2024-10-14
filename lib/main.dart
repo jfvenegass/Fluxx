@@ -25,13 +25,32 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Fluxx',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          primary: Color(0xFF48C9B0), // Verde Menta Oscuro
+          secondary: Color(0xFF64B5F6), // Azul Cielo Medio
+          error: Color(0xFFD32F2F), // Rojo Oscuro
+        ),
+        scaffoldBackgroundColor: Colors.white,
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(color: Colors.black),
+          bodyMedium: TextStyle(color: Colors.grey),
+          headlineLarge: TextStyle(color: Color(0xFF48C9B0), fontWeight: FontWeight.bold),
+          labelLarge: TextStyle(color: Colors.white),
+        ),
+        buttonTheme: const ButtonThemeData(
+          buttonColor: Color(0xFF48C9B0), // Verde Menta Oscuro
+          textTheme: ButtonTextTheme.primary,
+        ),
+        appBarTheme: const AppBarTheme(
+          color: Color(0xFF48C9B0), // Verde Menta Oscuro
+        ),
       ),
       home: LoginScreen(), // Página inicial
       routes: {
         '/login': (context) => LoginScreen(),
         '/signup': (context) => SignUpScreen(),
-        '/home': (context) =>  const HomePage(), 
+        '/home': (context) => const HomePage(), 
         '/user_info': (context) => const UserPage(), 
       },
     );
