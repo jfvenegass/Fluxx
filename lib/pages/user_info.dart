@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:app_movil/controllers/login_controller.dart';
 import 'package:app_movil/pages/home_page.dart';
 import 'package:app_movil/pages/widgets/barra_navegacion.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({super.key});
-  
+
   @override
   UserPageState createState() => UserPageState();
 }
 
 class UserPageState extends State<UserPage> {
-  int selectedIndex = 2; // Controlador de navegación, 2 es User Info
+  final LoginController loginController = Get.find(); // Obtener controlador
+
+  int selectedIndex = 2;
 
   void onItemTapped(int index) {
     setState(() {
@@ -25,10 +29,9 @@ class UserPageState extends State<UserPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const HomePage()),
-        ); // Navegar a Home reemplazando la vista actual.
+        );
         break;
       case 2:
-        // Ya estamos en User Info, no hace nada.
         break;
     }
   }
@@ -46,14 +49,14 @@ class UserPageState extends State<UserPage> {
                 title: const Text('Actividades Cuantitativas'),
                 onTap: () {
                   Navigator.of(context).pop(); // Cierra el diálogo actual
-                  // Llama a la función que abre el modal para agregar actividades cuantitativas.
+                  // Llama a la función que abre el modal para agregar actividades cuantitativas
                 },
               ),
               ListTile(
                 title: const Text('Actividades Booleanas'),
                 onTap: () {
                   Navigator.of(context).pop(); // Cierra el diálogo actual
-                  // Llama a la función que abre el modal para agregar actividades booleanas.
+                  // Llama a la función que abre el modal para agregar actividades booleanas
                 },
               ),
             ],
@@ -68,68 +71,56 @@ class UserPageState extends State<UserPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Información del Usuario'),
-        automaticallyImplyLeading: false, // Para que no aparezca la flecha de retroceso.
+        automaticallyImplyLeading: false,
+      ),
+      body: Center(  // Centra todos los elementos
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center, // Alineación vertical central
+            children: [
+              const CircleAvatar(
+                radius: 50,
+                backgroundImage: AssetImage('assets/user_avatar.png'),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                loginController.userName.value,
+                style: Theme.of(context).textTheme.headlineLarge,
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Correo Electrónico:',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              const SizedBox(height: 5),
+              Text(
+                loginController.userEmail.value,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Hábitos recomendados:',
+                style: Theme.of(context).textTheme.bodyLarge,
+                textAlign: TextAlign.center, // Centrar el texto
+              ),
+              const SizedBox(height: 5),
+              Text(
+                'Desayunar: Sí\nBeber Agua: 8 vasos\nEjercicio: 120 minutos\nDormir: 8 horas',
+                style: Theme.of(context).textTheme.bodyMedium,
+                textAlign: TextAlign.center, // Centrar el texto
+              ),
+            ],
+          ),
+        ),
       ),
       bottomNavigationBar: BarraNavegacion(
         selectedIndex: selectedIndex,
         onItemTapped: onItemTapped,
         onAddButtonPressed: showAddActivityModal,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Center( // Usar Center para centrar el contenido
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center, // Centrar verticalmente
-            children: [
-              const CircleAvatar(
-                radius: 50,
-                backgroundImage: AssetImage('assets/user_avatar.png'), // Imagen de perfil
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Nombre del Usuario',
-                style: Theme.of(context).textTheme.headlineLarge,
-                textAlign: TextAlign.center, // Centrar el texto
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Correo Electrónico:',
-                style: Theme.of(context).textTheme.bodyLarge,
-                textAlign: TextAlign.center, // Centrar el texto
-              ),
-              const SizedBox(height: 5),
-              Text(
-                'usuario@correo.com',
-                style: Theme.of(context).textTheme.bodyMedium,
-                textAlign: TextAlign.center, // Centrar el texto
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Hábitos Recomendados:',
-                style: Theme.of(context).textTheme.bodyLarge,
-                textAlign: TextAlign.center, // Centrar el texto
-              ),
-              const SizedBox(height: 5),
-              Text(
-                'Desayunar: Sí\nBeber Agua: 8 vasos\nEjercicio: 120 minutos\n Dormir: 8 horas',
-                style: Theme.of(context).textTheme.bodyMedium,
-                textAlign: TextAlign.center, // Centrar el texto
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.teal,
-                  foregroundColor: Colors.white,                      
-                ),
-                onPressed: () {
-                  // Acción para editar perfil
-                },
-                child: const Text('Editar Perfil'),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
+
+

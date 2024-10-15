@@ -8,33 +8,39 @@ class SignUpScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  // Obtenemos una instancia del controlador
   final LoginController loginController = Get.put(LoginController());
 
-  SignUpScreen({super.key});
-
   void registerUser(BuildContext context) {
+    String name = nameController.text.trim();
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
 
-    // Usar el controlador para registrar al usuario.
-    bool success = loginController.registerUser(email, password);
+    // Validar email y contraseña
+    String? emailError = loginController.validateEmail(email);
+    String? passwordError = loginController.validatePassword(password);
 
-    if (success) {
-      // Registro exitoso, redirigir al login.
+    if (emailError != null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Registro exitoso. Ahora puedes iniciar sesión.')),
+        SnackBar(content: Text(emailError)),
       );
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LoginScreen()),
-      );
-    } else {
-      // Mostrar error si el registro falla.
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error al registrarse. Verifica los datos e inténtalo de nuevo.')),
-      );
+      return;
     }
+
+    if (passwordError != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(passwordError)),
+      );
+      return;
+    }
+
+    // Registrar el usuario en el controlador
+    loginController.registerUser(name, email, password);
+
+    // Navegar al login después de registrarse
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginScreen()),
+    );
   }
 
   @override
@@ -50,14 +56,15 @@ class SignUpScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                'Fluxx',
+                'Crea tu cuenta en Fluxx',
                 style: TextStyle(
-                  fontSize: 40,
+                  fontSize: 32,
                   fontWeight: FontWeight.bold,
                   color: Colors.teal,
                 ),
               ),
               const SizedBox(height: 40),
+              // TextField para nombre
               TextField(
                 controller: nameController,
                 style: const TextStyle(color: Colors.teal),
@@ -74,6 +81,7 @@ class SignUpScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
+              // TextField para email
               TextField(
                 controller: emailController,
                 style: const TextStyle(color: Colors.teal),
@@ -90,6 +98,7 @@ class SignUpScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
+              // TextField para contraseña
               TextField(
                 controller: passwordController,
                 obscureText: true,
@@ -107,6 +116,7 @@ class SignUpScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 32),
+              // Botón de registro
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.teal,
@@ -122,14 +132,14 @@ class SignUpScreen extends StatelessWidget {
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => LoginScreen(),
-                    ),
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
                   );
                 },
                 child: const Text(
                   '¿Ya tienes cuenta? Inicia sesión aquí',
-                  style: TextStyle(color: Colors.blue),
+                  style: TextStyle(
+                    color: Colors.blue,
+                  ),
                 ),
               ),
             ],
@@ -139,5 +149,7 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 }
+
+
 
 

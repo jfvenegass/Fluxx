@@ -1,37 +1,38 @@
 import 'package:get/get.dart';
 
 class LoginController extends GetxController {
-  // Lista que simula una base de datos de usuarios registrados.
-  final RxList<Map<String, String>> registeredUsers = <Map<String, String>>[].obs;
+  var userName = ''.obs;
+  var userEmail = ''.obs;
+  var password = ''.obs;
+  var isRegistered = false.obs; // Estado para verificar si se ha registrado
+  
+  // Método para registrar usuario
+  void registerUser(String name, String email, String pass) {
+    userName.value = name;
+    userEmail.value = email;
+    password.value = pass;
+    isRegistered.value = true; // Cambia el estado a registrado
+  }
 
-  // Verificar si el email es válido y si la contraseña cumple con los requisitos mínimos.
+  // Método para validar el login
+  bool validateLogin(String email, String pass) {
+    return isRegistered.value && userEmail.value == email && password.value == pass;
+  }
+
+  // Validar email
   String? validateEmail(String email) {
     if (!GetUtils.isEmail(email)) {
-      return 'Email no válido';
+      return 'Por favor ingresa un email válido';
     }
     return null;
   }
 
-  String? validatePassword(String password) {
-    if (password.isEmpty) {
-      return 'La contraseña no puede estar vacía';
+  // Validar contraseña
+  String? validatePassword(String pass) {
+    if (pass.isEmpty || pass.length < 1) {
+      return 'La contraseña debe contener al menos un carácter';
     }
     return null;
-  }
-
-  // Función para registrar un usuario.
-  bool registerUser(String email, String password) {
-    if (validateEmail(email) == null && validatePassword(password) == null) {
-      registeredUsers.add({'email': email, 'password': password});
-      return true;
-    }
-    return false;
-  }
-
-  // Función para iniciar sesión.
-  bool loginUser(String email, String password) {
-    return registeredUsers.any(
-      (user) => user['email'] == email && user['password'] == password,
-    );
   }
 }
+

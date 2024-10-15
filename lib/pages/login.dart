@@ -8,45 +8,20 @@ class LoginScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  // Instancia del controlador
-  final LoginController loginController = Get.put(LoginController());
-
-  LoginScreen({super.key});
+  final LoginController loginController = Get.find();
 
   void loginUser(BuildContext context) {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
 
-    // Validar email y contraseña
-    String? emailError = loginController.validateEmail(email);
-    String? passwordError = loginController.validatePassword(password);
-
-    if (emailError != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(emailError)),
-      );
-      return;
-    }
-
-    if (passwordError != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(passwordError)),
-      );
-      return;
-    }
-
-    // Intentar iniciar sesión
-    bool success = loginController.loginUser(email, password);
-    if (success) {
-      // Si el inicio de sesión es exitoso, redirigir a la página principal
+    if (loginController.validateLogin(email, password)) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const HomePage()),
       );
     } else {
-      // Mostrar mensaje de error si el inicio de sesión falla
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Email o contraseña incorrectos.')),
+        const SnackBar(content: Text('Email o contraseña incorrectos')),
       );
     }
   }
@@ -107,9 +82,9 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(height: 32),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.teal,
-                  foregroundColor: Colors.white,
-                ),
+              backgroundColor: Colors.teal,
+              foregroundColor: Colors.white,                      
+            ),
                 onPressed: () {
                   loginUser(context);
                 },
@@ -120,9 +95,7 @@ class LoginScreen extends StatelessWidget {
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => SignUpScreen(),
-                    ),
+                    MaterialPageRoute(builder: (context) => SignUpScreen()),
                   );
                 },
                 child: const Text(
@@ -137,6 +110,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
+
 
 
 
