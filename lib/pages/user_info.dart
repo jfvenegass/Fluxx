@@ -117,6 +117,10 @@ class UserPageState extends State<UserPage> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.teal,
+                  foregroundColor: Colors.white,                      
+                ),
                 onPressed: () {
                   // Acción para editar perfil
                 },

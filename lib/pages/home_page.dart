@@ -51,14 +51,14 @@ class HomePageState extends State<HomePage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                title: const Text('Actividades Cuantitativas'),
+                title: const Text('Actividades Repetibles'),
                 onTap: () {
                   Navigator.of(context).pop();
                   showAddQuantitativeActivityDialog(context, controller);
                 },
               ),
               ListTile(
-                title: const Text('Actividades Booleanas'),
+                title: const Text('Actividades Unicas'),
                 onTap: () {
                   Navigator.of(context).pop();
                   showAddBooleanActivityDialog(context, controller);
@@ -91,7 +91,7 @@ class HomePageState extends State<HomePage> {
                 Navigator.of(context).pop(); // Cerrar el diálogo de confirmación
                 controller.addDailyPointsToTotalAndResetActivities(context);
               },
-              child: const Text('Añadir'),
+              child: const Text('Añadir'),  
             ),
           ],
         );
@@ -169,6 +169,10 @@ class HomePageState extends State<HomePage> {
                   children: [
                     StreakWidget(),
                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.teal,
+                        foregroundColor: Colors.white,                      
+                      ),
                       onPressed: () {
                         showConfirmationDialog(context, controller);
                       },

@@ -67,6 +67,10 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(height: 32), // Mayor separación antes del botón de inicio de sesión
               // Botón de inicio de sesión
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.teal,
+                  foregroundColor: Colors.white,                      
+                ),
                 onPressed: () {
                   Navigator.push(
                     context,
