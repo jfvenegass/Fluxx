@@ -5,7 +5,8 @@ import 'package:app_movil/pages/widgets/barra_navegacion.dart';
 import 'package:app_movil/controllers/activities_controller.dart';
 import 'package:app_movil/pages/widgets/activities_details.dart';
 import 'package:app_movil/pages/widgets/activities_modales.dart';
-import 'package:app_movil/pages/login.dart'; // Asegúrate de importar LoginScreen
+import 'package:app_movil/pages/login.dart'; 
+import 'package:app_movil/pages/widgets/progress_circle.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -171,10 +172,12 @@ class HomePageState extends State<HomePage> {
                       onPressed: () {
                         showConfirmationDialog(context, controller);
                       },
-                      child: const Text('Añadir puntos diarios al total'),
+                      child: const Text('Añadir'),
                     ),
                   ],
                 ),
+                const SizedBox(height: 16.0),
+                ProgressCircle(), // Aquí va la barra de progreso circular
                 const SizedBox(height: 16.0),
                 Obx(() => Text(
                       'Actividades totales: ${controller.totalActivities}',
