@@ -1,12 +1,55 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:app_movil/controllers/login_controller.dart';
 import 'package:app_movil/pages/home_page.dart';
 import 'package:app_movil/pages/signup.dart';
-import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  // Instancia del controlador
+  final LoginController loginController = Get.put(LoginController());
+
   LoginScreen({super.key});
+
+  void loginUser(BuildContext context) {
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+
+    // Validar email y contraseña
+    String? emailError = loginController.validateEmail(email);
+    String? passwordError = loginController.validatePassword(password);
+
+    if (emailError != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(emailError)),
+      );
+      return;
+    }
+
+    if (passwordError != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(passwordError)),
+      );
+      return;
+    }
+
+    // Intentar iniciar sesión
+    bool success = loginController.loginUser(email, password);
+    if (success) {
+      // Si el inicio de sesión es exitoso, redirigir a la página principal
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
+    } else {
+      // Mostrar mensaje de error si el inicio de sesión falla
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Email o contraseña incorrectos.')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,12 +58,11 @@ class LoginScreen extends StatelessWidget {
         title: const Text('Bienvenido a FLUXX'),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0), // Aumento del padding en todo el cuerpo
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Texto "Fluxx" en lugar del logo
               const Text(
                 'Fluxx',
                 style: TextStyle(
@@ -29,63 +71,54 @@ class LoginScreen extends StatelessWidget {
                   color: Colors.teal,
                 ),
               ),
-              const SizedBox(height: 40), // Espacio mayor entre el título y el primer TextField
-              // TextField para email con borde y texto teal al seleccionarlo
+              const SizedBox(height: 40),
               TextField(
                 controller: emailController,
-                style: const TextStyle(color: Colors.teal), // Cambia el color del texto al escribir
+                style: const TextStyle(color: Colors.teal),
                 decoration: const InputDecoration(
                   labelText: 'Email',
-                  labelStyle: TextStyle(color: Colors.black), // Borde y texto normal
-                  floatingLabelStyle: TextStyle(color: Colors.teal), // Cambia el color del label al estar enfocado
+                  labelStyle: TextStyle(color: Colors.black),
+                  floatingLabelStyle: TextStyle(color: Colors.teal),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black, width: 2.0), // Borde normal
+                    borderSide: BorderSide(color: Colors.black, width: 2.0),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.teal, width: 2.0), // Borde al estar enfocado
+                    borderSide: BorderSide(color: Colors.teal, width: 2.0),
                   ),
                 ),
               ),
-              const SizedBox(height: 24), // Mayor separación entre campos de texto
-              // TextField para contraseña con estilo de borde siempre visible y texto teal al seleccionarlo
+              const SizedBox(height: 24),
               TextField(
                 controller: passwordController,
                 obscureText: true,
-                style: const TextStyle(color: Colors.teal), // Cambia el color del texto al escribir
+                style: const TextStyle(color: Colors.teal),
                 decoration: const InputDecoration(
                   labelText: 'Contraseña',
-                  labelStyle: TextStyle(color: Colors.black), // Cambia color del label antes de enfocarse
-                  floatingLabelStyle: TextStyle(color: Colors.teal), // Cambia el color del label al estar enfocado
+                  labelStyle: TextStyle(color: Colors.black),
+                  floatingLabelStyle: TextStyle(color: Colors.teal),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black, width: 2.0), // Borde normal
+                    borderSide: BorderSide(color: Colors.black, width: 2.0),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.teal, width: 2.0), // Borde al estar enfocado
+                    borderSide: BorderSide(color: Colors.teal, width: 2.0),
                   ),
                 ),
               ),
-              const SizedBox(height: 32), // Mayor separación antes del botón de inicio de sesión
-              // Botón de inicio de sesión
+              const SizedBox(height: 32),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.teal,
-                  foregroundColor: Colors.white,                      
+                  foregroundColor: Colors.white,
                 ),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const HomePage(),
-                    ),
-                  );
+                  loginUser(context);
                 },
                 child: const Text('Iniciar Sesión'),
               ),
-              const SizedBox(height: 24), // Espacio adicional entre botón de inicio de sesión y enlace de registro
-              // Enlace a registro
+              const SizedBox(height: 24),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => SignUpScreen(),
@@ -94,9 +127,7 @@ class LoginScreen extends StatelessWidget {
                 },
                 child: const Text(
                   '¿No tienes cuenta? Regístrate aquí',
-                  style: TextStyle(
-                    color: Colors.blue,
-                  ),
+                  style: TextStyle(color: Colors.blue),
                 ),
               ),
             ],
@@ -106,6 +137,8 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
+
+
 
 
 

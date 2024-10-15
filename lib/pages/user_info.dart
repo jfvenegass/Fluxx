@@ -105,13 +105,13 @@ class UserPageState extends State<UserPage> {
               ),
               const SizedBox(height: 20),
               Text(
-                'Hábitos Saludables:',
+                'Hábitos Recomendados:',
                 style: Theme.of(context).textTheme.bodyLarge,
                 textAlign: TextAlign.center, // Centrar el texto
               ),
               const SizedBox(height: 5),
               Text(
-                'Desayunar: Sí\nBeber Agua: 8 vasos\nEjercicio: 30 minutos',
+                'Desayunar: Sí\nBeber Agua: 8 vasos\nEjercicio: 120 minutos\n Dormir: 8 horas',
                 style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.center, // Centrar el texto
               ),

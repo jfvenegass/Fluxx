@@ -87,6 +87,10 @@ class HomePageState extends State<HomePage> {
               child: const Text('Cancelar'),
             ),
             ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.teal,
+              foregroundColor: Colors.white,                      
+            ), 
               onPressed: () {
                 Navigator.of(context).pop(); // Cerrar el diálogo de confirmación
                 controller.addDailyPointsToTotalAndResetActivities(context);
