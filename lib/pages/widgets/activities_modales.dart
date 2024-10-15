@@ -8,7 +8,7 @@ Future<void> showAddBooleanActivityDialog(BuildContext context, ActivitiesContro
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text('Añadir Actividad Booleana'),
+        title: const Text('Añadir Actividad Unica'),
         content: TextField(
           controller: nameController,
           decoration: const InputDecoration(hintText: 'Nombre de la actividad'),
@@ -21,6 +21,10 @@ Future<void> showAddBooleanActivityDialog(BuildContext context, ActivitiesContro
             child: const Text('Cancelar'),
           ),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.teal,
+              foregroundColor: Colors.white,                      
+            ),
             onPressed: () {
               final String activityName = nameController.text.trim();
               if (activityName.isNotEmpty) {
@@ -44,7 +48,7 @@ Future<void> showAddQuantitativeActivityDialog(BuildContext context, ActivitiesC
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text('Añadir Actividad Cuantitativa'),
+        title: const Text('Añadir Actividad Repetible'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -67,6 +71,10 @@ Future<void> showAddQuantitativeActivityDialog(BuildContext context, ActivitiesC
             child: const Text('Cancelar'),
           ),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.teal,
+              foregroundColor: Colors.white,                      
+            ),
             onPressed: () {
               final String activityName = nameController.text.trim();
               final int? initialCount = int.tryParse(countController.text.trim());

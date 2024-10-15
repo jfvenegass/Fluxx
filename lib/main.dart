@@ -1,4 +1,5 @@
 import 'package:app_movil/controllers/activities_controller.dart';
+import 'package:app_movil/controllers/login_controller.dart';
 import 'package:app_movil/pages/home_page.dart';
 import 'package:app_movil/pages/login.dart';
 import 'package:app_movil/pages/signup.dart';
@@ -6,9 +7,11 @@ import 'package:app_movil/pages/user_info.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+
 void main() async {
   // Inicializamos el controlador
   Get.put(ActivitiesController());
+  Get.put(LoginController());
 
   //Inicializamos Firebase
   WidgetsFlutterBinding.ensureInitialized();

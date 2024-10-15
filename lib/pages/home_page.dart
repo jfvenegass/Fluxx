@@ -5,7 +5,8 @@ import 'package:app_movil/pages/widgets/barra_navegacion.dart';
 import 'package:app_movil/controllers/activities_controller.dart';
 import 'package:app_movil/pages/widgets/activities_details.dart';
 import 'package:app_movil/pages/widgets/activities_modales.dart';
-import 'package:app_movil/pages/login.dart'; // Asegúrate de importar LoginScreen
+import 'package:app_movil/pages/login.dart'; 
+import 'package:app_movil/pages/widgets/progress_circle.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -50,14 +51,14 @@ class HomePageState extends State<HomePage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                title: const Text('Actividades Cuantitativas'),
+                title: const Text('Actividades Repetibles'),
                 onTap: () {
                   Navigator.of(context).pop();
                   showAddQuantitativeActivityDialog(context, controller);
                 },
               ),
               ListTile(
-                title: const Text('Actividades Booleanas'),
+                title: const Text('Actividades Unicas'),
                 onTap: () {
                   Navigator.of(context).pop();
                   showAddBooleanActivityDialog(context, controller);
@@ -86,11 +87,15 @@ class HomePageState extends State<HomePage> {
               child: const Text('Cancelar'),
             ),
             ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.teal,
+              foregroundColor: Colors.white,                      
+            ), 
               onPressed: () {
                 Navigator.of(context).pop(); // Cerrar el diálogo de confirmación
                 controller.addDailyPointsToTotalAndResetActivities(context);
               },
-              child: const Text('Añadir'),
+              child: const Text('Añadir'),  
             ),
           ],
         );
@@ -168,13 +173,19 @@ class HomePageState extends State<HomePage> {
                   children: [
                     StreakWidget(),
                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.teal,
+                        foregroundColor: Colors.white,                      
+                      ),
                       onPressed: () {
                         showConfirmationDialog(context, controller);
                       },
-                      child: const Text('Añadir puntos diarios al total'),
+                      child: const Text('Añadir'),
                     ),
                   ],
                 ),
+                const SizedBox(height: 16.0),
+                ProgressCircle(), // Aquí va la barra de progreso circular
                 const SizedBox(height: 16.0),
                 Obx(() => Text(
                       'Actividades totales: ${controller.totalActivities}',
@@ -185,7 +196,7 @@ class HomePageState extends State<HomePage> {
                     )),
                 const SizedBox(height: 16.0),
                 Obx(() => Text(
-                      'Actividades booleanas chequeadas: ${controller.checkedBooleanActivities}',
+                      'Actividades Unicas realizadas: ${controller.checkedBooleanActivities}',
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -193,7 +204,7 @@ class HomePageState extends State<HomePage> {
                     )),
                 const SizedBox(height: 16.0),
                 Obx(() => Text(
-                      'Actividades cuantitativas realizadas al menos una vez: ${controller.completedQuantitativeActivities}',
+                      'Actividades Repetibles empezadas: ${controller.completedQuantitativeActivities}',
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,

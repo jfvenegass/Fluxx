@@ -1,12 +1,30 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:app_movil/controllers/login_controller.dart';
 import 'package:app_movil/pages/home_page.dart';
 import 'package:app_movil/pages/signup.dart';
-import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  LoginScreen({super.key});
+  final LoginController loginController = Get.find();
+
+  void loginUser(BuildContext context) {
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+
+    if (loginController.validateLogin(email, password)) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Email o contraseña incorrectos')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,57 +33,74 @@ class LoginScreen extends StatelessWidget {
         title: const Text('Bienvenido a FLUXX'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset('assets/logo.png', height: 100), // Añadir logo
-              const SizedBox(height: 20),
-              TextField(
-                controller: emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
+              const Text(
+                'Fluxx',
+                style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.teal,
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 40),
+              TextField(
+                controller: emailController,
+                style: const TextStyle(color: Colors.teal),
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                  labelStyle: TextStyle(color: Colors.black),
+                  floatingLabelStyle: TextStyle(color: Colors.teal),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black, width: 2.0),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.teal, width: 2.0),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
               TextField(
                 controller: passwordController,
                 obscureText: true,
+                style: const TextStyle(color: Colors.teal),
                 decoration: const InputDecoration(
                   labelText: 'Contraseña',
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: Colors.black),
+                  floatingLabelStyle: TextStyle(color: Colors.teal),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black, width: 2.0),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.teal, width: 2.0),
+                  ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 32),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.teal,
+              foregroundColor: Colors.white,                      
+            ),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const HomePage(),
-                    ),
-                  );
+                  loginUser(context);
                 },
                 child: const Text('Iniciar Sesión'),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
               GestureDetector(
                 onTap: () {
-                  // Navega a la pantalla de Sign Up
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => SignUpScreen(),
-                    ),
+                    MaterialPageRoute(builder: (context) => SignUpScreen()),
                   );
                 },
                 child: const Text(
                   '¿No tienes cuenta? Regístrate aquí',
-                  style: TextStyle(
-                    color: Colors.blue,
-                  ),
+                  style: TextStyle(color: Colors.blue),
                 ),
               ),
             ],
@@ -75,3 +110,9 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+

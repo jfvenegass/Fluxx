@@ -18,7 +18,7 @@ import 'package:app_movil/controllers/activities_controller.dart';
             ElevatedButton(
               onPressed: () {
                 // Añadir puntos al total y reiniciar actividades
-                controller.addDailyPointsToTotalAndResetActivities();
+                controller.addDailyPointsToTotalAndResetActivities(context);
                 
                 // Cerrar el diálogo
                 Navigator.of(context).pop();
