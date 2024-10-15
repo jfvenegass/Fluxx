@@ -188,7 +188,7 @@ class HomePageState extends State<HomePage> {
                     )),
                 const SizedBox(height: 16.0),
                 Obx(() => Text(
-                      'Actividades booleanas chequeadas: ${controller.checkedBooleanActivities}',
+                      'Actividades Unicas realizadas: ${controller.checkedBooleanActivities}',
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -196,7 +196,7 @@ class HomePageState extends State<HomePage> {
                     )),
                 const SizedBox(height: 16.0),
                 Obx(() => Text(
-                      'Actividades cuantitativas realizadas al menos una vez: ${controller.completedQuantitativeActivities}',
+                      'Actividades Repetibles empezadas: ${controller.completedQuantitativeActivities}',
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,

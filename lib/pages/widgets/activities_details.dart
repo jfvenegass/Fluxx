@@ -23,7 +23,7 @@ class ActivitiesDetails extends StatelessWidget {
     return Obx(() {
       return ExpansionTile(
         title: const Text(
-          'Actividades Booleanas',
+          'Actividades Unicas',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -33,7 +33,7 @@ class ActivitiesDetails extends StatelessWidget {
           if (controller.booleanActivities.isEmpty)
             const Padding(
               padding: EdgeInsets.all(16.0),
-              child: Text('No hay actividades booleanas agregadas.'),
+              child: Text('No hay actividades unicas agregadas.'),
             )
           else
             ListView.builder(
@@ -83,7 +83,7 @@ class ActivitiesDetails extends StatelessWidget {
     return Obx(() {
       return ExpansionTile(
         title: const Text(
-          'Actividades Cuantitativas',
+          'Actividades Repetibles',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -93,7 +93,7 @@ class ActivitiesDetails extends StatelessWidget {
           if (controller.quantitativeActivities.isEmpty)
             const Padding(
               padding: EdgeInsets.all(16.0),
-              child: Text('No hay actividades cuantitativas agregadas.'),
+              child: Text('No hay actividades repetibles agregadas.'),
             )
           else
             ListView.builder(

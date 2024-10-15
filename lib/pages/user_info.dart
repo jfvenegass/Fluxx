@@ -77,50 +77,53 @@ class UserPageState extends State<UserPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: CircleAvatar(
+        child: Center( // Usar Center para centrar el contenido
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center, // Centrar verticalmente
+            children: [
+              CircleAvatar(
                 radius: 50,
                 backgroundImage: AssetImage('assets/user_avatar.png'), // Imagen de perfil
               ),
-            ),
-            const SizedBox(height: 20),
-            Center(
-              child: Text(
+              const SizedBox(height: 20),
+              Text(
                 'Nombre del Usuario',
                 style: Theme.of(context).textTheme.headlineLarge,
+                textAlign: TextAlign.center, // Centrar el texto
               ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Correo Electrónico:',
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            const SizedBox(height: 5),
-            Text(
-              'usuario@correo.com',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Hábitos Saludables:',
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            const SizedBox(height: 5),
-            Text(
-              'Desayunar: Sí\nBeber Agua: 8 vasos\nEjercicio: 30 minutos',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Acción para editar perfil
-              },
-              child: const Text('Editar Perfil'),
-            ),
-          ],
+              const SizedBox(height: 20),
+              Text(
+                'Correo Electrónico:',
+                style: Theme.of(context).textTheme.bodyLarge,
+                textAlign: TextAlign.center, // Centrar el texto
+              ),
+              const SizedBox(height: 5),
+              Text(
+                'usuario@correo.com',
+                style: Theme.of(context).textTheme.bodyMedium,
+                textAlign: TextAlign.center, // Centrar el texto
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Hábitos Saludables:',
+                style: Theme.of(context).textTheme.bodyLarge,
+                textAlign: TextAlign.center, // Centrar el texto
+              ),
+              const SizedBox(height: 5),
+              Text(
+                'Desayunar: Sí\nBeber Agua: 8 vasos\nEjercicio: 30 minutos',
+                style: Theme.of(context).textTheme.bodyMedium,
+                textAlign: TextAlign.center, // Centrar el texto
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  // Acción para editar perfil
+                },
+                child: const Text('Editar Perfil'),
+              ),
+            ],
+          ),
         ),
       ),
     );
