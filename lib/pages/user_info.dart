@@ -81,7 +81,7 @@ class UserPageState extends State<UserPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center, // Centrar verticalmente
             children: [
-              CircleAvatar(
+              const CircleAvatar(
                 radius: 50,
                 backgroundImage: AssetImage('assets/user_avatar.png'), // Imagen de perfil
               ),
