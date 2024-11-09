@@ -10,6 +10,8 @@ class LoginScreen extends StatelessWidget {
 
   final LoginController loginController = Get.find();
 
+  LoginScreen({super.key});
+
   void loginUser(BuildContext context) {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();

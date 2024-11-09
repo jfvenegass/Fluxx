@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class WelcomeScreen extends StatelessWidget {
+  const WelcomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,12 +15,12 @@ class WelcomeScreen extends StatelessWidget {
               'Bienvenido a Fluxxr',
               style: Theme.of(context).textTheme.headlineLarge,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Get.toNamed('/login');
               },
-              child: Text('Comenzar'),
+              child: const Text('Comenzar'),
             ),
           ],
         ),

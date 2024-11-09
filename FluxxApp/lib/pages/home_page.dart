@@ -5,7 +5,7 @@ import 'package:app_movil/pages/widgets/barra_navegacion.dart';
 import 'package:app_movil/controllers/activities_controller.dart';
 import 'package:app_movil/pages/widgets/activities_details.dart';
 import 'package:app_movil/pages/widgets/activities_modales.dart';
-import 'package:app_movil/pages/login.dart'; 
+import 'package:app_movil/pages/login.dart';
 import 'package:app_movil/pages/widgets/progress_circle.dart';
 
 class HomePage extends StatefulWidget {
@@ -87,15 +87,16 @@ class HomePageState extends State<HomePage> {
               child: const Text('Cancelar'),
             ),
             ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.teal,
-              foregroundColor: Colors.white,                      
-            ), 
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.teal,
+                foregroundColor: Colors.white,
+              ),
               onPressed: () {
-                Navigator.of(context).pop(); // Cerrar el diálogo de confirmación
+                Navigator.of(context)
+                    .pop(); // Cerrar el diálogo de confirmación
                 controller.addDailyPointsToTotalAndResetActivities(context);
               },
-              child: const Text('Añadir'),  
+              child: const Text('Añadir'),
             ),
           ],
         );
@@ -175,7 +176,7 @@ class HomePageState extends State<HomePage> {
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.teal,
-                        foregroundColor: Colors.white,                      
+                        foregroundColor: Colors.white,
                       ),
                       onPressed: () {
                         showConfirmationDialog(context, controller);
@@ -252,20 +253,23 @@ class HomePageState extends State<HomePage> {
 class StreakWidget extends StatelessWidget {
   final controller = Get.find<ActivitiesController>();
 
+  StreakWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Obx(() => Row(
-      children: [
-        const Icon(Icons.local_fire_department, color: Colors.red, size: 24),
-        const SizedBox(width: 4.0),
-        Text(
-          '${controller.streak}',
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
-    ));
+          children: [
+            const Icon(Icons.local_fire_department,
+                color: Colors.red, size: 24),
+            const SizedBox(width: 4.0),
+            Text(
+              '${controller.streak}',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ));
   }
 }

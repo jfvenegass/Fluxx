@@ -10,6 +10,8 @@ class SignUpScreen extends StatelessWidget {
 
   final LoginController loginController = Get.put(LoginController());
 
+  SignUpScreen({super.key});
+
   void registerUser(BuildContext context) {
     String name = nameController.text.trim();
     String email = emailController.text.trim();

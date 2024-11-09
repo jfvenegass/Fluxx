@@ -1,3 +1,4 @@
+import 'package:app_movil/controllers/achievement_controller.dart';
 import 'package:app_movil/controllers/activities_controller.dart';
 import 'package:app_movil/controllers/login_controller.dart';
 import 'package:app_movil/pages/home_page.dart';
@@ -9,13 +10,12 @@ import 'package:get/get.dart';
 
 
 void main() async {
-  // Inicializamos el controlador
+  // Inicializamos los controladores
   Get.put(ActivitiesController());
   Get.put(LoginController());
+  Get.put(AchievementController());
 
-  //Inicializamos Firebase
   WidgetsFlutterBinding.ensureInitialized();
-  //await Firebase.initializeApp();
 
   runApp(const MyApp());
 }
@@ -30,9 +30,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
         colorScheme: ColorScheme.fromSwatch().copyWith(
-          primary: Color(0xFF48C9B0), // Verde Menta Oscuro
-          secondary: Color(0xFF64B5F6), // Azul Cielo Medio
-          error: Color(0xFFD32F2F), // Rojo Oscuro
+          primary: const Color(0xFF48C9B0), // Verde Menta Oscuro
+          secondary: const Color(0xFF64B5F6), // Azul Cielo Medio
+          error: const Color(0xFFD32F2F), // Rojo Oscuro
         ),
         scaffoldBackgroundColor: Colors.white,
         textTheme: const TextTheme(
