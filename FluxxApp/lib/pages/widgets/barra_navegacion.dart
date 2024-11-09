@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 class BarraNavegacion extends StatelessWidget {
@@ -16,18 +17,9 @@ class BarraNavegacion extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.add),
-          label: 'Añadir',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Usuario',
-        ),
+        BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Añadir'),
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+        BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Usuario'),
       ],
       currentIndex: selectedIndex,
       onTap: (index) {
@@ -40,5 +32,3 @@ class BarraNavegacion extends StatelessWidget {
     );
   }
 }
-
-

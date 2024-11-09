@@ -1,46 +1,8 @@
+
 import 'package:flutter/material.dart';
-import 'package:app_movil/controllers/activities_controller.dart';
+import 'package:app_movil/backend/database/db_helper.dart';
 
-Future<void> showAddBooleanActivityDialog(BuildContext context, ActivitiesController controller) {
-  final TextEditingController nameController = TextEditingController();
-
-  return showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Añadir Actividad Unica'),
-        content: TextField(
-          controller: nameController,
-          decoration: const InputDecoration(hintText: 'Nombre de la actividad'),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('Cancelar'),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.teal,
-              foregroundColor: Colors.white,                      
-            ),
-            onPressed: () {
-              final String activityName = nameController.text.trim();
-              if (activityName.isNotEmpty) {
-                controller.addBooleanActivity(activityName);
-                Navigator.of(context).pop();
-              }
-            },
-            child: const Text('Añadir'),
-          ),
-        ],
-      );
-    },
-  );
-}
-
-Future<void> showAddQuantitativeActivityDialog(BuildContext context, ActivitiesController controller) {
+Future<void> showAddActivityDialog(BuildContext context, String type) {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController countController = TextEditingController();
 
@@ -48,7 +10,7 @@ Future<void> showAddQuantitativeActivityDialog(BuildContext context, ActivitiesC
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text('Añadir Actividad Repetible'),
+        title: Text(type == 'boolean' ? 'Añadir Actividad Unica' : 'Añadir Actividad Repetible'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -56,11 +18,12 @@ Future<void> showAddQuantitativeActivityDialog(BuildContext context, ActivitiesC
               controller: nameController,
               decoration: const InputDecoration(hintText: 'Nombre de la actividad'),
             ),
-            TextField(
-              controller: countController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(hintText: 'Cantidad esperada'),
-            ),
+            if (type == 'quantitative')
+              TextField(
+                controller: countController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(hintText: 'Cantidad esperada'),
+              ),
           ],
         ),
         actions: [
@@ -71,15 +34,17 @@ Future<void> showAddQuantitativeActivityDialog(BuildContext context, ActivitiesC
             child: const Text('Cancelar'),
           ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.teal,
-              foregroundColor: Colors.white,                      
-            ),
-            onPressed: () {
-              final String activityName = nameController.text.trim();
-              final int? initialCount = int.tryParse(countController.text.trim());
-              if (activityName.isNotEmpty && initialCount != null) {
-                controller.addQuantitativeActivity(activityName, initialCount);
+            onPressed: () async {
+              final String name = nameController.text.trim();
+              if (name.isNotEmpty) {
+                if (type == 'boolean') {
+                  await DBHelper.insert('activities', {'title': name, 'description': 'Boolean'});
+                } else {
+                  final int? count = int.tryParse(countController.text.trim());
+                  if (count != null) {
+                    await DBHelper.insert('activities', {'title': name, 'description': 'Quantitative: $count'});
+                  }
+                }
                 Navigator.of(context).pop();
               }
             },

@@ -1,38 +1,31 @@
+
 import 'package:get/get.dart';
+import '../backend/database/db_helper.dart';
+import '../backend/services/api_service.dart';
 
 class LoginController extends GetxController {
   var userName = ''.obs;
   var userEmail = ''.obs;
-  var password = ''.obs;
-  var isRegistered = false.obs; // Estado para verificar si se ha registrado
-  
-  // Método para registrar usuario
-  void registerUser(String name, String email, String pass) {
-    userName.value = name;
-    userEmail.value = email;
-    password.value = pass;
-    isRegistered.value = true; // Cambia el estado a registrado
-  }
+  var isRegistered = false.obs;
 
-  // Método para validar el login
-  bool validateLogin(String email, String pass) {
-    return isRegistered.value && userEmail.value == email && password.value == pass;
-  }
-
-  // Validar email
-  String? validateEmail(String email) {
-    if (!GetUtils.isEmail(email)) {
-      return 'Por favor ingresa un email válido';
+  Future<void> registerUser(String name, String email, String password) async {
+    final success = await APIService.register(name, email, password);
+    if (success) {
+      await DBHelper.saveUserInfo({'name': name, 'email': email});
+      userName.value = name;
+      userEmail.value = email;
+      isRegistered.value = true;
     }
-    return null;
   }
 
-  // Validar contraseña
-  String? validatePassword(String pass) {
-    if (pass.isEmpty || pass.length < 1) {
-      return 'La contraseña debe contener al menos un carácter';
+  Future<bool> validateLogin(String email, String password) async {
+    final success = await APIService.login(email, password);
+    if (success) {
+      final userInfo = await DBHelper.getUserInfo();
+      userName.value = userInfo['name'];
+      userEmail.value = userInfo['email'];
+      return true;
     }
-    return null;
+    return false;
   }
 }
-

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -12,13 +11,13 @@ class WelcomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Bienvenido a Fluxxr',
+              'Bienvenido a Fluxx',
               style: Theme.of(context).textTheme.headlineLarge,
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Get.toNamed('/login');
+                Navigator.pushNamed(context, '/login');
               },
               child: const Text('Comenzar'),
             ),
