@@ -14,7 +14,7 @@ class ProgressCircle extends StatelessWidget {
       lineWidth: 10.0,
       percent: progress.clamp(0.0, 1.0),
       center: Text(
-        "${(progress * 100).toStringAsFixed(1)}%",
+        "${(progress.clamp(0.0, 1.0) * 100).toStringAsFixed(1)}%",
         style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
       ),
       progressColor: Colors.teal,
