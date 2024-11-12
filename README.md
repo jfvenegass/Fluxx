@@ -27,6 +27,7 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
+[Comprantes de actividades de Github realizadas.pdf](https://github.com/user-attachments/files/17711452/Comprantes.de.actividades.de.Github.realizadas.pdf)
 
 
 
