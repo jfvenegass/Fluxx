@@ -1,16 +1,15 @@
-
 import 'package:flutter/material.dart';
 
 class BarraNavegacion extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onItemTapped;
-  final VoidCallback onAddButtonPressed;
+  final VoidCallback onAddButtonPressed;  // Corrigiendo tipo de función
 
   const BarraNavegacion({
     super.key,
     required this.selectedIndex,
     required this.onItemTapped,
-    required this.onAddButtonPressed,
+    required this.onAddButtonPressed,  // Elimina 'Null Function()'
   });
 
   @override
@@ -24,9 +23,9 @@ class BarraNavegacion extends StatelessWidget {
       currentIndex: selectedIndex,
       onTap: (index) {
         if (index == 0) {
-          onAddButtonPressed();
+          onAddButtonPressed();  // Llamada a la función de añadir actividad
         } else {
-          onItemTapped(index);
+          onItemTapped(index);   // Llamada a la función de navegación
         }
       },
     );

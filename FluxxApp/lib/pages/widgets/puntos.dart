@@ -1,7 +1,9 @@
-
+import 'package:app_movil/controllers/activities_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 void showConfirmationDialog(BuildContext context) {
+  final controller = Get.find<ActivitiesController>();
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -17,6 +19,7 @@ void showConfirmationDialog(BuildContext context) {
           ),
           ElevatedButton(
             onPressed: () {
+              controller.dailyPoints.value += 10; // Ejemplo: Incremento fijo
               Navigator.of(context).pop();
             },
             child: const Text('Añadir'),

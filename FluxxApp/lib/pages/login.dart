@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../backend/services/api_service.dart';
+import 'package:get/get.dart';
+import '../controllers/login_controller.dart';
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
@@ -7,12 +8,19 @@ class LoginScreen extends StatelessWidget {
 
   LoginScreen({super.key});
 
-  void loginUser(BuildContext context) async {
+  void loginUser(BuildContext context, LoginController loginController) async {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
 
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in all fields')),
+      );
+      return;
+    }
+
     try {
-      final success = await APIService.login(email, password);
+      final success = await loginController.validateLogin(email, password);
       if (success) {
         Navigator.pushReplacementNamed(context, '/home');
       } else {
@@ -29,6 +37,8 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loginController = Get.find<LoginController>();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
@@ -47,8 +57,15 @@ class LoginScreen extends StatelessWidget {
               decoration: const InputDecoration(labelText: 'Password'),
             ),
             ElevatedButton(
-              onPressed: () => loginUser(context),
+              onPressed: () => loginUser(context, loginController),
               child: const Text('Login'),
+            ),
+            // Botón para ir al registro
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/signup');
+              },
+              child: const Text("Don't have an account? Sign Up"),
             ),
           ],
         ),

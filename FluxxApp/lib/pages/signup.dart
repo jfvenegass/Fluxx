@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../backend/services/api_service.dart';
-import '../backend/database/db_helper.dart';
+import 'package:get/get.dart';
+import '../controllers/login_controller.dart';
 
 class SignUpScreen extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
@@ -9,19 +9,40 @@ class SignUpScreen extends StatelessWidget {
 
   SignUpScreen({super.key});
 
-  void registerUser(BuildContext context) async {
+  void registerUser(BuildContext context, LoginController loginController) async {
     String name = nameController.text.trim();
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
 
+    print("Datos ingresados: Name: $name, Email: $email, Password: $password");
+
+    // Validar campos vacíos
+    if (name.isEmpty || email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in all fields')),
+      );
+      return;
+    }
+
+    // Validar formato del email
+    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a valid email address')),
+      );
+      return;
+    }
+
     try {
-      final success = await APIService.register(name, email, password);
-      if (success) {
-        await DBHelper.saveUserInfo({"name": name, "email": email});
+      // Registrar usuario usando el controlador
+      await loginController.registerUser(name, email, password);
+      if (loginController.isRegistered.value) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Registration successful!')),
+        );
         Navigator.pushReplacementNamed(context, '/login');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Registration failed')),
+          const SnackBar(content: Text('Registration failed. User might already exist.')),
         );
       }
     } catch (e) {
@@ -33,6 +54,8 @@ class SignUpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loginController = Get.find<LoginController>();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sign Up'),
@@ -54,9 +77,17 @@ class SignUpScreen extends StatelessWidget {
               obscureText: true,
               decoration: const InputDecoration(labelText: 'Password'),
             ),
+            const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () => registerUser(context),
+              onPressed: () => registerUser(context, loginController),
               child: const Text('Sign Up'),
+            ),
+            const SizedBox(height: 10),
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/login');
+              },
+              child: const Text("Already have an account? Login"),
             ),
           ],
         ),

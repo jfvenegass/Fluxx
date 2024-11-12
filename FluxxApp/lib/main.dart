@@ -10,15 +10,16 @@ import 'package:get/get.dart';
 
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   // Inicializamos los controladores
   Get.put(ActivitiesController());
   Get.put(LoginController());
   Get.put(AchievementController());
 
-  WidgetsFlutterBinding.ensureInitialized();
-
   runApp(const MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

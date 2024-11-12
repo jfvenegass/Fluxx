@@ -1,15 +1,16 @@
-
+import 'package:app_movil/controllers/activities_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:app_movil/backend/database/db_helper.dart';
+import 'package:get/get.dart';
 
 class AddDailyPointsButton extends StatelessWidget {
   const AddDailyPointsButton({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<ActivitiesController>();
     return ElevatedButton(
-      onPressed: () async {
-        await DBHelper.insert('points', {'daily_points': 100}); // Simulating daily points addition
+      onPressed: () {
+        controller.dailyPoints.value += 100;
       },
       child: const Text('Añadir puntos diarios'),
     );
