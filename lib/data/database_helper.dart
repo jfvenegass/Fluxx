@@ -23,8 +23,9 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2, // Incrementar la versión para activar onUpgrade
       onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
     );
   }
 
@@ -65,6 +66,42 @@ class DatabaseHelper {
         name TEXT NOT NULL UNIQUE
       )
     ''');
+
+    // Crear tabla para streak
+    await db.execute('''
+      CREATE TABLE streak (
+        id INTEGER PRIMARY KEY,
+        value INTEGER NOT NULL
+      )
+    ''');
+
+    // Crear tabla para puntos totales
+    await db.execute('''
+      CREATE TABLE points (
+        id INTEGER PRIMARY KEY,
+        value INTEGER NOT NULL
+      )
+    ''');
+  }
+
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      // Crear tabla streak si no existe
+      await db.execute('''
+        CREATE TABLE streak (
+          id INTEGER PRIMARY KEY,
+          value INTEGER NOT NULL
+        )
+      ''');
+
+      // Crear tabla para puntos totales si no existe
+      await db.execute('''
+        CREATE TABLE points (
+          id INTEGER PRIMARY KEY,
+          value INTEGER NOT NULL
+        )
+      ''');
+    }
   }
 
   // Métodos para manejar usuarios
@@ -95,7 +132,9 @@ class DatabaseHelper {
   Future<List<Map<String, bool>>> getBooleanActivities() async {
     final db = await database;
     final result = await db.query('boolean_activities');
-    return result.map((e) => {e['name'] as String: (e['isChecked'] as int) == 1}).toList();
+    return result
+        .map((e) => {e['name'] as String: (e['isChecked'] as int) == 1})
+        .toList();
   }
 
   Future<void> updateBooleanActivity(String name, bool isChecked) async {
@@ -170,4 +209,39 @@ class DatabaseHelper {
     final result = await db.query('achievements');
     return result.map((e) => e['name'] as String).toList();
   }
+
+  // Métodos para manejar streak
+  Future<void> saveStreak(int streak) async {
+    final db = await database;
+    await db.insert('streak', {'id': 1, 'value': streak},
+        conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  Future<int> getStreak() async {
+    final db = await database;
+    final result = await db.query('streak', where: 'id = ?', whereArgs: [1]);
+    if (result.isNotEmpty) {
+      return result.first['value'] as int;
+    }
+    return 0;
+  }
+
+  // Métodos para manejar puntos totales
+  Future<void> saveTotalPoints(int points) async {
+    final db = await database;
+    await db.insert('points', {'id': 1, 'value': points},
+        conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  Future<int> getTotalPoints() async {
+    final db = await database;
+    final result = await db.query('points', where: 'id = ?', whereArgs: [1]);
+    if (result.isNotEmpty) {
+      return result.first['value'] as int;
+    }
+    return 0;
+  }
 }
+
+
+

@@ -1,10 +1,11 @@
-import 'dart:convert';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../data/database_helper.dart';
 import 'package:flutter/material.dart';
 
 class ActivitiesController extends GetxController {
   static const int pointsPerBooleanActivity = 3;
+
+  final DatabaseHelper dbHelper = DatabaseHelper();
 
   final booleanActivities = <Map<String, bool>>[].obs;
   final quantitativeActivities = <Map<String, Map<String, int>>>[].obs;
@@ -16,58 +17,58 @@ class ActivitiesController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _loadData();
+    loadData();
   }
 
-  Future<void> _saveData() async {
-    final prefs = await SharedPreferences.getInstance();
+  Future<void> loadData() async {
+    // Cargar streak y puntos totales
+    streak.value = await dbHelper.getStreak();
+    totalPoints.value = await dbHelper.getTotalPoints();
 
-    prefs.setString(
-      'booleanActivities',
-      jsonEncode(booleanActivities.map((e) => e).toList()),
-    );
+    // Cargar actividades
+    final booleanList = await dbHelper.getBooleanActivities();
+    booleanActivities.assignAll(booleanList);
 
-    prefs.setString(
-      'quantitativeActivities',
-      jsonEncode(quantitativeActivities.map((e) => e).toList()),
-    );
+    final quantitativeList = await dbHelper.getQuantitativeActivities();
+    quantitativeActivities.assignAll(quantitativeList);
 
-    prefs.setInt('dailyPoints', dailyPoints.value);
-    prefs.setInt('totalPoints', totalPoints.value);
-    prefs.setInt('streak', streak.value);
+    // Actualizar puntos diarios
+    _updatePoints();
   }
 
-  Future<void> _loadData() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    final booleanActivitiesString = prefs.getString('booleanActivities');
-    if (booleanActivitiesString != null) {
-      final List<dynamic> booleanList = jsonDecode(booleanActivitiesString);
-      booleanActivities.assignAll(
-        booleanList.map((e) => Map<String, bool>.from(e)).toList(),
-      );
-    }
-
-    final quantitativeActivitiesString = prefs.getString('quantitativeActivities');
-    if (quantitativeActivitiesString != null) {
-      final List<dynamic> quantitativeList = jsonDecode(quantitativeActivitiesString);
-      quantitativeActivities.assignAll(
-        quantitativeList.map((e) => Map<String, Map<String, int>>.from(e)).toList(),
-      );
-    }
-
-    dailyPoints.value = prefs.getInt('dailyPoints') ?? 0;
-    totalPoints.value = prefs.getInt('totalPoints') ?? 0;
-    streak.value = prefs.getInt('streak') ?? 0;
+  Future<void> saveData() async {
+    // Guardar streak y puntos totales
+    await dbHelper.saveStreak(streak.value);
+    await dbHelper.saveTotalPoints(totalPoints.value);
   }
 
+  // Métodos para actividades booleanas
   void toggleBooleanActivity(int index) {
     final activity = booleanActivities[index];
     final key = activity.keys.first;
     booleanActivities[index] = {key: !activity[key]!};
+    dbHelper.updateBooleanActivity(key, booleanActivities[index][key]!);
     _updatePoints();
   }
 
+  void addBooleanActivity(String activityName) {
+    if (activityName.isNotEmpty &&
+        !booleanActivities.any((activity) => activity.keys.first == activityName)) {
+      booleanActivities.add({activityName: false});
+      dbHelper.insertBooleanActivity({activityName: false});
+      _updatePoints();
+    }
+  }
+
+  void removeBooleanActivity(int index) {
+    final activity = booleanActivities[index];
+    final key = activity.keys.first;
+    booleanActivities.removeAt(index);
+    dbHelper.deleteBooleanActivity(key);
+    _updatePoints();
+  }
+
+  // Métodos para actividades cuantitativas
   void incrementQuantitativeActivity(int index) {
     final activity = quantitativeActivities[index];
     final key = activity.keys.first;
@@ -78,6 +79,7 @@ class ActivitiesController extends GetxController {
         'current': currentCount + 1,
       }
     };
+    dbHelper.updateQuantitativeActivity(key, currentCount + 1);
     _updatePoints();
   }
 
@@ -92,15 +94,8 @@ class ActivitiesController extends GetxController {
           'current': currentCount - 1,
         }
       };
+      dbHelper.updateQuantitativeActivity(key, currentCount - 1);
       _updatePoints();
-    }
-  }
-
-  void addBooleanActivity(String activityName) {
-    if (activityName.isNotEmpty &&
-        !booleanActivities.any((activity) => activity.keys.first == activityName)) {
-      booleanActivities.add({activityName: false});
-      _saveData();
     }
   }
 
@@ -110,91 +105,28 @@ class ActivitiesController extends GetxController {
       quantitativeActivities.add({
         activityName: {'initial': initialCount, 'current': 0}
       });
-      _saveData();
+      dbHelper.insertQuantitativeActivity({
+        activityName: {'initial': initialCount, 'current': 0}
+      });
+      _updatePoints();
     }
-  }
-
-  void removeBooleanActivity(int index) {
-    booleanActivities.removeAt(index);
-    _updatePoints();
-    _saveData();
   }
 
   void removeQuantitativeActivity(int index) {
+    final activity = quantitativeActivities[index];
+    final key = activity.keys.first;
     quantitativeActivities.removeAt(index);
+    dbHelper.deleteQuantitativeActivity(key);
     _updatePoints();
-    _saveData();
   }
 
-  void addDailyPointsToTotal() {
-    totalPoints.value += dailyPoints.value;
-  }
-
-  void resetDailyPoints() {
-    dailyPoints.value = 0;
-    _saveData();
-  }
-
-  void addDailyPointsToTotalAndResetActivities(BuildContext context) {
-    addDailyPointsToTotal();
-    resetBooleanActivities();
-    resetQuantitativeActivities();
-    resetDailyPoints();
-    incrementStreak(context);
-    _saveData();
-  }
-
-  void resetBooleanActivities() {
-    for (var i = 0; i < booleanActivities.length; i++) {
-      final activity = booleanActivities[i];
-      final key = activity.keys.first;
-      booleanActivities[i] = {key: false};
-    }
-    _saveData();
-  }
-
-  void resetQuantitativeActivities() {
-    for (var i = 0; i < quantitativeActivities.length; i++) {
-      final activity = quantitativeActivities[i];
-      final key = activity.keys.first;
-      quantitativeActivities[i] = {
-        key: {
-          'initial': activity[key]!['initial']!,
-          'current': 0,
-        }
-      };
-    }
-    _saveData();
-  }
-
-  int get totalActivities {
-    return booleanActivities.length + quantitativeActivities.length;
-  }
-
-  int get checkedBooleanActivities {
-    return booleanActivities.where((activity) => activity.values.first).length;
-  }
-
-  int get completedQuantitativeActivities {
-    return quantitativeActivities
-        .where((activity) => activity.values.first['current']! > 0)
-        .length;
-  }
-
-  void _updatePoints() {
-    dailyPoints.value =
-        (checkedBooleanActivities * pointsPerBooleanActivity) +
-        quantitativeActivities.fold(
-          0,
-          (sum, activity) => sum + activity.values.first['current']!,
-        );
-  }
-
+  // Métodos para streak
   void incrementStreak(BuildContext context) {
     streak.value += 1;
     if (streak.value % 10 == 0) {
-      Future.delayed(Duration.zero, () => showCongratulationDialog(context));
+      showCongratulationDialog(context);
     }
+    dbHelper.saveStreak(streak.value);
   }
 
   void showCongratulationDialog(BuildContext context) {
@@ -202,7 +134,7 @@ class ActivitiesController extends GetxController {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('¡Felicidades!'),
+          title: const Text('Felicidades!'),
           content: Text('Has alcanzado una racha de ${streak.value} días.'),
           actions: [
             TextButton(
@@ -216,4 +148,76 @@ class ActivitiesController extends GetxController {
       },
     );
   }
+
+  // Puntos totales y diarios
+  void addDailyPointsToTotal() {
+    totalPoints.value += dailyPoints.value;
+    dbHelper.saveTotalPoints(totalPoints.value);
+  }
+
+  void resetDailyPoints() {
+    dailyPoints.value = 0;
+    _updatePoints();
+  }
+
+  void addDailyPointsToTotalAndResetActivities(BuildContext context) {
+    addDailyPointsToTotal();
+    resetBooleanActivities();
+    resetQuantitativeActivities();
+    resetDailyPoints();
+    incrementStreak(context);
+  }
+
+  void resetBooleanActivities() {
+    for (var i = 0; i < booleanActivities.length; i++) {
+      final activity = booleanActivities[i];
+      final key = activity.keys.first;
+      booleanActivities[i] = {key: false};
+      dbHelper.updateBooleanActivity(key, false);
+    }
+  }
+
+  void resetQuantitativeActivities() {
+    for (var i = 0; i < quantitativeActivities.length; i++) {
+      final activity = quantitativeActivities[i];
+      final key = activity.keys.first;
+      quantitativeActivities[i] = {
+        key: {
+          'initial': activity[key]!['initial']!,
+          'current': 0,
+        }
+      };
+      dbHelper.updateQuantitativeActivity(key, 0);
+    }
+  }
+
+  // Calcular actividades booleanas marcadas
+  int get checkedBooleanActivities {
+    return booleanActivities.where((activity) => activity.values.first).length;
+  }
+
+  // Calcular actividades totales
+  int get totalActivities {
+    return booleanActivities.length + quantitativeActivities.length;
+  }
+
+  // Calcular actividades cuantitativas completadas
+  int get completedQuantitativeActivities {
+    return quantitativeActivities
+        .where((activity) => activity.values.first['current']! > 0)
+        .length;
+  }
+
+  // Calcular puntos diarios
+  void _updatePoints() {
+    dailyPoints.value =
+        (checkedBooleanActivities * pointsPerBooleanActivity) +
+        quantitativeActivities.fold(
+          0,
+          (sum, activity) => sum + activity.values.first['current']!,
+        );
+  }
 }
+
+
+
