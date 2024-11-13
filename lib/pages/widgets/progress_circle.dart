@@ -22,15 +22,21 @@ class ProgressCircle extends StatelessWidget {
 
       if (totalQuantitativeActivities > 0) {
         double completedQuantitative = controller.quantitativeActivities
+            .where((activity) => activity.values.first['initial']! > 0) // Evitar divisiones por 0
             .map((activity) => activity.values.first['current']! /
                 activity.values.first['initial']!)
-            .reduce((a, b) => a + b); // Sumar los porcentajes de cada actividad
+            .fold(0.0, (a, b) => a + b); // Sumar los porcentajes de cada actividad
 
         quantitativeProgress = completedQuantitative / totalQuantitativeActivities;
       }
 
       // Calcular el progreso total (50% booleano y 50% cuantitativo)
       double totalProgress = (booleanProgress * 0.5) + (quantitativeProgress * 0.5);
+
+      // Depuración para seguimiento
+      print("Boolean Progress: $booleanProgress");
+      print("Quantitative Progress: $quantitativeProgress");
+      print("Total Progress: $totalProgress");
 
       return CircularPercentIndicator(
         radius: 100.0,
