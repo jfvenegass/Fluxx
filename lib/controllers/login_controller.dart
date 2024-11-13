@@ -1,22 +1,38 @@
 import 'package:get/get.dart';
+import '../data/database_helper.dart';
 
 class LoginController extends GetxController {
   var userName = ''.obs;
   var userEmail = ''.obs;
   var password = ''.obs;
-  var isRegistered = false.obs; // Estado para verificar si se ha registrado
-  
+  var isRegistered = false.obs;
+
+  final DatabaseHelper _dbHelper = DatabaseHelper();
+
   // Método para registrar usuario
-  void registerUser(String name, String email, String pass) {
+  Future<void> registerUser(String name, String email, String pass) async {
+    final user = {
+      'name': name,
+      'email': email,
+      'password': pass,
+    };
+    await _dbHelper.insertUser(user);
     userName.value = name;
     userEmail.value = email;
     password.value = pass;
-    isRegistered.value = true; // Cambia el estado a registrado
+    isRegistered.value = true;
   }
 
   // Método para validar el login
-  bool validateLogin(String email, String pass) {
-    return isRegistered.value && userEmail.value == email && password.value == pass;
+  Future<bool> validateLogin(String email, String pass) async {
+    final user = await _dbHelper.getUserByEmail(email);
+    if (user != null && user['password'] == pass) {
+      userName.value = user['name'];
+      userEmail.value = user['email'];
+      password.value = user['password'];
+      return true;
+    }
+    return false;
   }
 
   // Validar email
@@ -35,4 +51,3 @@ class LoginController extends GetxController {
     return null;
   }
 }
-

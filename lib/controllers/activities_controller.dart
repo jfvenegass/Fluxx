@@ -1,73 +1,66 @@
+import 'dart:convert';
 import 'package:get/get.dart';
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/material.dart';
 
 class ActivitiesController extends GetxController {
-  // Constantes
   static const int pointsPerBooleanActivity = 3;
 
-  // Lista de actividades booleanas (nombre y si está chequeada o no)
-  final booleanActivities = [
-    {'Ejercicio matutino': false},
-    {'Meditación': false},
-  ].obs;
+  final booleanActivities = <Map<String, bool>>[].obs;
+  final quantitativeActivities = <Map<String, Map<String, int>>>[].obs;
 
-  // Lista de actividades cuantitativas (nombre, valor inicial y actual)
-  final quantitativeActivities = [
-    {
-      'Ejercicio de fuerza': {'initial': 5, 'current': 0}
-    },
-    {
-      'Ciclismo': {'initial': 3, 'current': 0}
-    },
-  ].obs;
-
-  // Puntajes
-  var dailyPoints = 0.obs; // Puntos obtenidos en el día
-  var totalPoints = 0.obs; // Puntos acumulados (inicialmente en 0)
-  var streak = 0.obs; // Racha de días consecutivos
+  var dailyPoints = 0.obs;
+  var totalPoints = 0.obs;
+  var streak = 0.obs;
 
   @override
   void onInit() {
     super.onInit();
-    _checkStreak();
+    _loadData();
   }
 
-  // Método para contar el total de actividades (booleanas + cuantitativas)
-  int get totalActivities =>
-      booleanActivities.length + quantitativeActivities.length;
+  Future<void> _saveData() async {
+    final prefs = await SharedPreferences.getInstance();
 
-  // Método para contar cuántas actividades booleanas están chequeadas
-  int get checkedBooleanActivities =>
-      booleanActivities.where((activity) => activity.values.first).length;
+    prefs.setString(
+      'booleanActivities',
+      jsonEncode(booleanActivities.map((e) => e).toList()),
+    );
 
-  // Método para contar cuántas actividades cuantitativas se han hecho al menos una vez
-  int get completedQuantitativeActivities => quantitativeActivities
-      .where((activity) => activity.values.first['current']! > 0)
-      .length;
+    prefs.setString(
+      'quantitativeActivities',
+      jsonEncode(quantitativeActivities.map((e) => e).toList()),
+    );
 
-  // Método para contar el número total de veces que se ha realizado una actividad cuantitativa
-  int get totalQuantitativeActivityCount => quantitativeActivities
-      .map((activity) => activity.values.first['current']!)
-      .reduce((a, b) => a + b);
+    prefs.setInt('dailyPoints', dailyPoints.value);
+    prefs.setInt('totalPoints', totalPoints.value);
+    prefs.setInt('streak', streak.value);
+  }
 
-  // Añadir una nueva actividad booleana
-  void addBooleanActivity(String activityName) {
-    if (activityName.isNotEmpty && !booleanActivities.any((activity) => activity.keys.first == activityName)) {
-      booleanActivities.add({activityName: false});
+  Future<void> _loadData() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final booleanActivitiesString = prefs.getString('booleanActivities');
+    if (booleanActivitiesString != null) {
+      final List<dynamic> booleanList = jsonDecode(booleanActivitiesString);
+      booleanActivities.assignAll(
+        booleanList.map((e) => Map<String, bool>.from(e)).toList(),
+      );
     }
-  }
 
-  // Eliminar una actividad booleana
-  void removeBooleanActivity(int index) {
-    if (booleanActivities[index].values.first) {
-      dailyPoints.value -= pointsPerBooleanActivity;
+    final quantitativeActivitiesString = prefs.getString('quantitativeActivities');
+    if (quantitativeActivitiesString != null) {
+      final List<dynamic> quantitativeList = jsonDecode(quantitativeActivitiesString);
+      quantitativeActivities.assignAll(
+        quantitativeList.map((e) => Map<String, Map<String, int>>.from(e)).toList(),
+      );
     }
-    booleanActivities.removeAt(index);
-    _updatePoints();
+
+    dailyPoints.value = prefs.getInt('dailyPoints') ?? 0;
+    totalPoints.value = prefs.getInt('totalPoints') ?? 0;
+    streak.value = prefs.getInt('streak') ?? 0;
   }
 
-  // Alternar el estado de una actividad booleana (chequeada o no)
   void toggleBooleanActivity(int index) {
     final activity = booleanActivities[index];
     final key = activity.keys.first;
@@ -75,36 +68,19 @@ class ActivitiesController extends GetxController {
     _updatePoints();
   }
 
-  // Añadir una nueva actividad cuantitativa
-  void addQuantitativeActivity(String activityName, int initialCount) {
-    if (activityName.isNotEmpty && !quantitativeActivities.any((activity) => activity.keys.first == activityName)) {
-      quantitativeActivities.add({
-        activityName: {'initial': initialCount, 'current': 0}
-      });
-    }
-  }
-
-  // Eliminar una actividad cuantitativa
-  void removeQuantitativeActivity(int index) {
-    final activity = quantitativeActivities[index];
-    final currentCount = activity.values.first['current']!;
-    dailyPoints.value -= currentCount; // Restamos las veces que se ha realizado
-    quantitativeActivities.removeAt(index);
-    _updatePoints();
-  }
-
-  // Incrementar el valor actual de una actividad cuantitativa
   void incrementQuantitativeActivity(int index) {
     final activity = quantitativeActivities[index];
     final key = activity.keys.first;
     final currentCount = activity[key]!['current']!;
     quantitativeActivities[index] = {
-      key: {'initial': activity[key]!['initial']!, 'current': currentCount + 1}
+      key: {
+        'initial': activity[key]!['initial']!,
+        'current': currentCount + 1,
+      }
     };
     _updatePoints();
   }
 
-  // Decrementar el valor actual de una actividad cuantitativa
   void decrementQuantitativeActivity(int index) {
     final activity = quantitativeActivities[index];
     final key = activity.keys.first;
@@ -113,36 +89,70 @@ class ActivitiesController extends GetxController {
       quantitativeActivities[index] = {
         key: {
           'initial': activity[key]!['initial']!,
-          'current': currentCount - 1
+          'current': currentCount - 1,
         }
       };
+      _updatePoints();
     }
+  }
+
+  void addBooleanActivity(String activityName) {
+    if (activityName.isNotEmpty &&
+        !booleanActivities.any((activity) => activity.keys.first == activityName)) {
+      booleanActivities.add({activityName: false});
+      _saveData();
+    }
+  }
+
+  void addQuantitativeActivity(String activityName, int initialCount) {
+    if (activityName.isNotEmpty &&
+        !quantitativeActivities.any((activity) => activity.keys.first == activityName)) {
+      quantitativeActivities.add({
+        activityName: {'initial': initialCount, 'current': 0}
+      });
+      _saveData();
+    }
+  }
+
+  void removeBooleanActivity(int index) {
+    booleanActivities.removeAt(index);
     _updatePoints();
+    _saveData();
   }
 
-  // Actualizar los puntajes diarios
-  void _updatePoints() {
-    int newDailyPoints =
-        (checkedBooleanActivities * pointsPerBooleanActivity) + totalQuantitativeActivityCount;
-    dailyPoints.value = newDailyPoints;
+  void removeQuantitativeActivity(int index) {
+    quantitativeActivities.removeAt(index);
+    _updatePoints();
+    _saveData();
   }
 
-  // Añadir los puntos diarios al total (cuando decidas hacerlo)
   void addDailyPointsToTotal() {
     totalPoints.value += dailyPoints.value;
   }
 
-  // Resetear puntos diarios (se puede usar al final del día)
   void resetDailyPoints() {
     dailyPoints.value = 0;
+    _saveData();
   }
 
-  // Método para reiniciar las actividades booleanas (desmarcar todas)
+  void addDailyPointsToTotalAndResetActivities(BuildContext context) {
+    addDailyPointsToTotal();
+    resetBooleanActivities();
+    resetQuantitativeActivities();
+    resetDailyPoints();
+    incrementStreak(context);
+    _saveData();
+  }
+
   void resetBooleanActivities() {
-    resetActivities(booleanActivities, false);
+    for (var i = 0; i < booleanActivities.length; i++) {
+      final activity = booleanActivities[i];
+      final key = activity.keys.first;
+      booleanActivities[i] = {key: false};
+    }
+    _saveData();
   }
 
-  // Método para reiniciar las actividades cuantitativas (poner en 0 las actuales)
   void resetQuantitativeActivities() {
     for (var i = 0; i < quantitativeActivities.length; i++) {
       final activity = quantitativeActivities[i];
@@ -154,28 +164,32 @@ class ActivitiesController extends GetxController {
         }
       };
     }
+    _saveData();
   }
 
-  // Método para reiniciar las actividades
-  void resetActivities<T>(RxList<Map<String, T>> activities, T defaultValue) {
-    for (var i = 0; i < activities.length; i++) {
-      final activity = activities[i];
-      final key = activity.keys.first;
-      activities[i] = {key: defaultValue};
-    }
+  int get totalActivities {
+    return booleanActivities.length + quantitativeActivities.length;
   }
 
-  // Método para añadir los puntos diarios al total y reiniciar las actividades
-  void addDailyPointsToTotalAndResetActivities(BuildContext context) {
-    addDailyPointsToTotal();
-    resetBooleanActivities();
-    resetQuantitativeActivities();
-    resetDailyPoints();
-    incrementStreak(context);
-    _saveLastActiveDate();
+  int get checkedBooleanActivities {
+    return booleanActivities.where((activity) => activity.values.first).length;
   }
 
-  // Método para incrementar la racha
+  int get completedQuantitativeActivities {
+    return quantitativeActivities
+        .where((activity) => activity.values.first['current']! > 0)
+        .length;
+  }
+
+  void _updatePoints() {
+    dailyPoints.value =
+        (checkedBooleanActivities * pointsPerBooleanActivity) +
+        quantitativeActivities.fold(
+          0,
+          (sum, activity) => sum + activity.values.first['current']!,
+        );
+  }
+
   void incrementStreak(BuildContext context) {
     streak.value += 1;
     if (streak.value % 10 == 0) {
@@ -183,7 +197,6 @@ class ActivitiesController extends GetxController {
     }
   }
 
-  // Método para mostrar el diálogo de felicitación
   void showCongratulationDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -202,29 +215,5 @@ class ActivitiesController extends GetxController {
         );
       },
     );
-  }
-
-  // Método para reiniciar la racha
-  void resetStreak() {
-    streak.value = 0;
-  }
-
-  // Método para guardar la última fecha activa
-  Future<void> _saveLastActiveDate() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('lastActiveDate', DateTime.now().toIso8601String());
-  }
-
-  // Método para verificar la racha
-  Future<void> _checkStreak() async {
-    final prefs = await SharedPreferences.getInstance();
-    final lastActiveDateStr = prefs.getString('lastActiveDate');
-    if (lastActiveDateStr != null) {
-      final lastActiveDate = DateTime.parse(lastActiveDateStr);
-      final now = DateTime.now();
-      if (now.difference(lastActiveDate).inDays >= 1) {
-        resetStreak();
-      }
-    }
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:app_movil/controllers/login_controller.dart';
 import 'package:app_movil/pages/home_page.dart';
+import 'package:app_movil/pages/login.dart';
 import 'package:app_movil/pages/widgets/barra_navegacion.dart';
 
 class UserPage extends StatefulWidget {
@@ -32,6 +33,7 @@ class UserPageState extends State<UserPage> {
         );
         break;
       case 2:
+        // Estamos en la página de usuario
         break;
     }
   }
@@ -49,20 +51,32 @@ class UserPageState extends State<UserPage> {
                 title: const Text('Actividades Cuantitativas'),
                 onTap: () {
                   Navigator.of(context).pop(); // Cierra el diálogo actual
-                  // Llama a la función que abre el modal para agregar actividades cuantitativas
                 },
               ),
               ListTile(
                 title: const Text('Actividades Booleanas'),
                 onTap: () {
                   Navigator.of(context).pop(); // Cierra el diálogo actual
-                  // Llama a la función que abre el modal para agregar actividades booleanas
                 },
               ),
             ],
           ),
         );
       },
+    );
+  }
+
+  void logout(BuildContext context) {
+    // Opcional: limpiar estados relacionados con el usuario si es necesario
+    loginController.userName.value = '';
+    loginController.userEmail.value = '';
+    loginController.password.value = '';
+    loginController.isRegistered.value = false;
+
+    // Redirigir al LoginScreen
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginScreen()),
     );
   }
 
@@ -73,7 +87,7 @@ class UserPageState extends State<UserPage> {
         title: const Text('Información del Usuario'),
         automaticallyImplyLeading: false,
       ),
-      body: Center(  // Centra todos los elementos
+      body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -110,6 +124,17 @@ class UserPageState extends State<UserPage> {
                 style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.center, // Centrar el texto
               ),
+              const SizedBox(height: 30),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.teal,
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: () {
+                  logout(context); // Llamada al método para cerrar sesión
+                },
+                child: const Text('Cerrar Sesión'),
+              ),
             ],
           ),
         ),
@@ -122,5 +147,3 @@ class UserPageState extends State<UserPage> {
     );
   }
 }
-
-

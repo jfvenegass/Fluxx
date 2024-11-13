@@ -10,7 +10,7 @@ class SignUpScreen extends StatelessWidget {
 
   final LoginController loginController = Get.put(LoginController());
 
-  void registerUser(BuildContext context) {
+  void registerUser(BuildContext context) async {
     String name = nameController.text.trim();
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
@@ -33,8 +33,12 @@ class SignUpScreen extends StatelessWidget {
       return;
     }
 
-    // Registrar el usuario en el controlador
-    loginController.registerUser(name, email, password);
+    // Registrar el usuario
+    await loginController.registerUser(name, email, password);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Usuario registrado con éxito')),
+    );
 
     // Navegar al login después de registrarse
     Navigator.pushReplacement(
@@ -64,7 +68,6 @@ class SignUpScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 40),
-              // TextField para nombre
               TextField(
                 controller: nameController,
                 style: const TextStyle(color: Colors.teal),
@@ -81,7 +84,6 @@ class SignUpScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              // TextField para email
               TextField(
                 controller: emailController,
                 style: const TextStyle(color: Colors.teal),
@@ -98,7 +100,6 @@ class SignUpScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              // TextField para contraseña
               TextField(
                 controller: passwordController,
                 obscureText: true,
@@ -116,7 +117,6 @@ class SignUpScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 32),
-              // Botón de registro
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.teal,
@@ -149,7 +149,3 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 }
-
-
-
-

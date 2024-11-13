@@ -10,11 +10,11 @@ class LoginScreen extends StatelessWidget {
 
   final LoginController loginController = Get.find();
 
-  void loginUser(BuildContext context) {
+  Future<void> loginUser(BuildContext context) async {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
 
-    if (loginController.validateLogin(email, password)) {
+    if (await loginController.validateLogin(email, password)) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const HomePage()),
@@ -82,9 +82,9 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(height: 32),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.teal,
-              foregroundColor: Colors.white,                      
-            ),
+                  backgroundColor: Colors.teal,
+                  foregroundColor: Colors.white,
+                ),
                 onPressed: () {
                   loginUser(context);
                 },
@@ -110,9 +110,3 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
