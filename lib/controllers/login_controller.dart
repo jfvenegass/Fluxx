@@ -45,7 +45,7 @@ class LoginController extends GetxController {
 
   // Validar contraseña
   String? validatePassword(String pass) {
-    if (pass.isEmpty || pass.length < 1) {
+    if (pass.isEmpty || pass.isEmpty) {
       return 'La contraseña debe contener al menos un carácter';
     }
     return null;

@@ -30,9 +30,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
         colorScheme: ColorScheme.fromSwatch().copyWith(
-          primary: Color(0xFF48C9B0), // Verde Menta Oscuro
-          secondary: Color(0xFF64B5F6), // Azul Cielo Medio
-          error: Color(0xFFD32F2F), // Rojo Oscuro
+          primary: const Color(0xFF48C9B0), // Verde Menta Oscuro
+          secondary: const Color(0xFF64B5F6), // Azul Cielo Medio
+          error: const Color(0xFFD32F2F), // Rojo Oscuro
         ),
         scaffoldBackgroundColor: Colors.white,
         textTheme: const TextTheme(
